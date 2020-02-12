@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');

@@ -1,11 +1,7 @@
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const config = require('config');
-
-const secretKey = config.get('secretKey');
-console.log('environment', secretKey);
-// console.log(secretKey);
+const secretKey = process.env.SECRET;
 
 const userSchema = new db.Schema({
     username    : String,
