@@ -17,9 +17,9 @@ app.set('views', path.join(__dirname , '/views')); // set express to look in thi
 app.set('view engine', 'ejs'); // configure template engine
 app.use(express.static(path.join(__dirname, 'public'))); // configure express to use public folder
 
-app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/admin', adminRouter);
+app.use('/', indexRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log('The Server is running...'));
