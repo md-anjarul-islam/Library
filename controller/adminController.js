@@ -15,6 +15,7 @@ async function getAllBook (req, res) {
 
 async function getRemoveUser (req, res) {
     const userId = req.params.userId;
+    await bookHandler.removeUserBook({_id: userId});
     await userHandler.removeUser(userId);
     
     let users = await userHandler.findAllUser();
@@ -25,7 +26,7 @@ async function getRemoveUser (req, res) {
 
 async function getRemoveBook(req, res) {
     const bookId = req.params.bookId;
-    await bookHandler.removeBook(bookId);
+    await bookHandler.removeBook({_id: bookId});
     
     let books = await bookHandler.findAllBook();   
 
