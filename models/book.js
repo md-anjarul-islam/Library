@@ -1,4 +1,6 @@
 const db = require('../config/db');
+const fs = require('fs');
+const path = require('path');
 
 const bookSchema = new db.Schema({
     title       : String,
@@ -24,8 +26,33 @@ async function editBook(bookId, info){
     const books = await Book.updateOne({_id: bookId}, {$set: info});
 }
 
-async function removeBook(bookId){
-    await Book.deleteOne({_id: bookId});
+async function removeBook(book){
+    book = await Book.findOne(book);
+    const location = path.join(__dirname, '../', 'public/uploads',book.image);
+    // console.log(location);
+    fs.unlink(location, (err) => {
+        if(err)
+            console.log('Error deleting image file');
+        else
+            console.log('Image file deleted successfully');
+    })
+    await Book.deleteOne({_id: book._id});
+}
+
+async function removeUserBook(user){
+    books = await Book.find({modifier: user._id});
+    const basepath = path.join(__dirname, '../', 'public/uploads');
+
+    books.forEach( async (book) => {
+        const location = path.join(basepath, book.image);
+        fs.unlink(location, (err) => {
+            if(err)
+                console.log('Error deleting image file', book.image);
+            else
+                console.log('Image file deleted successfully', book.image);
+        })
+        await Book.deleteOne({_id: book._id});
+    });
 }
 
 async function showBook(){
@@ -61,5 +88,6 @@ module.exports = {
     searchBook,
     showBook,
     findAllBook,
-    showDashboardBook
+    showDashboardBook,
+    removeUserBook
 };
