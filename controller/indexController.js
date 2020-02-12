@@ -1,21 +1,33 @@
 const userHandler = require('../models/user');
 const bookHandler = require('../models/book');
-const parseToken = require('../util/tokenParser');
 
 async function getHome (req, res) {
     const books = await bookHandler.showBook();
-    if(req.cookies.token){
-        // if a token exists in cookie then 
-        let user = parseToken(req.cookies.token);        
-        user = await userHandler.findUser({_id: user._id});
-        const data = {
-            books,
-            user,
-            link_name   : ['/user/dashboard', '/logout'],
-            link_msg    : ['Dashboard', 'Log Out']   
-        }  
-        res.render('home', {data: data} );   // redirect to homepage
+    let token = req.cookies.token;
+
+    if(token){
+        // if a token exists in cookie then verify it and take action
+        token = userHandler.verifyToken(token);
+        let user = await userHandler.findUser({_id: token._id});
+        if(user){
+            const data = {
+                books,
+                user,
+                link_name   : ['/user/dashboard', '/logout'],
+                link_msg    : ['Dashboard', 'Log Out']   
+            }  
+            res.render('home', {data: data} );   // redirect to homepage
+        }else{
+            const data = {
+                books,
+                message     : "Verification failed.",
+                link_name   : ['/user/dashboard', '/logout'],
+                link_msg    : ['Dashboard', 'Log Out']   
+            }  
+            res.render('home', {data: data} );   // redirect to homepage
+        }        
     }
+    /// token not found in cookies
     else{
             const data = {        
             books,
@@ -27,10 +39,13 @@ async function getHome (req, res) {
 };
 
 async function getLogin(req, res){
-    if(req.cookies.token){
-        let user = parseToken(req.cookies.token);        
-        user = await userHandler.findUser({_id: user._id});
-        const books = await bookHandler.showBook();        
+    const books = await bookHandler.showBook();
+    let token = req.cookies.token;
+    if(token){
+        // if a token exists in cookie then verify it and take action
+        token = userHandler.verifyToken(token);
+        let user = await userHandler.findUser({_id: token._id});
+        if(user){
             const data = {
                 message     : 'You are already logged in',
                 books,
@@ -39,6 +54,15 @@ async function getLogin(req, res){
                 link_msg    : ['Dashboard', 'Log Out']   
             }
             res.render('home', {data: data});
+        }else{
+            const data = {
+                message     : "Verification failed",
+                books,                
+                link_name   : ['/user/dashboard', '/logout'],
+                link_msg    : ['Dashboard', 'Log Out']   
+            }
+            res.render('home', {data: data});
+        }            
     }
     else
         res.render('login');
@@ -59,9 +83,14 @@ async function getLogout (req, res) {
 }
 
 async function getRegister(req, res) {
-    const user = await userHandler.loggedUser();
-    if(user){
-        const books = await bookHandler.showBook();        
+    const books = await bookHandler.showBook();
+    let token = req.cookies.token;
+    if(token){
+        // if a token exists in cookie then verify it and take action
+        token = userHandler.verifyToken(token);
+        let user = await userHandler.findUser({_id: token._id});
+        if(user){
+            user = await userHandler.findUser({_id: user._id});
             const data = {
                 message     : 'You are already logged in',
                 books,
@@ -70,28 +99,35 @@ async function getRegister(req, res) {
                 link_msg    : ['Dashboard', 'Log Out']   
             }
             res.render('home', {data: data});
+        }else{
+            user = await userHandler.findUser({_id: user._id});
+            const data = {
+                message     : 'Verification failed.',
+                books,                
+                link_name   : ['/user/dashboard', '/logout'],
+                link_msg    : ['Dashboard', 'Log Out']   
+            }
+            res.render('home', {data: data});
+        }
+        
     }
     else
         res.render('register');
 }
 
-async function postLogin (req, res) {
+async function postLogin(req, res) {
     let user = req.body;
+    console.log('user from body', user);
     const validation = await userHandler.loginValidate(user);
-    const books = await bookHandler.showBook();    
+    const books = await bookHandler.showBook();
 
     if(validation == false){
         const message = 'The username or password is incorrect.';        
         res.render('login', {info: message});
     }      
     else{
-        await userHandler.addSession({username: user.username});
-        user = await userHandler.loggedUser();        
-        const userInfo = {
-            _id: user._id
-        };
-
-        const token = userHandler.getAuthToken(userInfo);
+        user = await userHandler.findUser({username: user.username});
+        const token = await user.getAuthToken();
         res.cookie('token', token);
 
             if(user.username === 'admin'){           
@@ -124,6 +160,9 @@ async function postRegister (req, res) {
         res.render('register', {info: message});
     }
     else{
+        const user = await userHandler.findUser({username: req.body.username});
+        const token = await user.getAuthToken();
+        res.cookie('token', token);
         const data = {
             books,
             user        : req.body,
@@ -136,19 +175,34 @@ async function postRegister (req, res) {
 
 async function postSearchBook (req, res) {
     const keyword = req.body.keyword;
-    const books = await bookHandler.searchBook(keyword);
-    const user = await userHandler.loggedUser();
+    const books = await bookHandler.searchBook(keyword);    
     const message = ( books.length == 0? 'No Book found': null);
-    if(user){
-        const data = {
-            books,
-            user,
-            message,
-            link_name   : ['/user/dashboard', '/logout'],
-            link_msg    : ['Dashboard', 'Log Out']   
-        }  
-        res.render('home', {data: data} );   // redirect to homepage
+
+    let token = req.cookies.token;
+    if(token){
+        let user = userHandler.verifyToken(token);
+        user = await userHandler.findUser({_id: user._id});
+    
+        if(user){
+            const data = {
+                books,
+                user,
+                message,
+                link_name   : ['/user/dashboard', '/logout'],
+                link_msg    : ['Dashboard', 'Log Out']   
+            }  
+            res.render('home', {data: data} );   // redirect to homepage
+        } else{
+            const data = {
+                books,                
+                message,
+                link_name   : ['/user/dashboard', '/logout'],
+                link_msg    : ['Dashboard', 'Log Out']   
+            }  
+            res.render('home', {data: data} );   // redirect to homepage
+        }
     }
+    
     else{
             const data = {        
             books,
