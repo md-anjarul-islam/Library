@@ -2,14 +2,13 @@ const userHandler = require('../models/user');
 const bookHandler = require('../models/book');
 
 async function getProfile (req, res) {
-    let user = req.body.user;
+    let user = req.cookies.user;
     user = await userHandler.findUser({_id: user._id});
-    console.log('Profile info',user);
     res.render('profile', {userInfo: user});
 }
 
 async function getEditProfile(req, res)  {
-    let user = req.body.user;
+    let user = req.cookies.user;
     user = await userHandler.findUser({_id: user._id});
 
     if(user)
@@ -21,16 +20,14 @@ function getAddbook (req, res) {
 }
 
 async function getDashboard(req, res) {    
-    let user = req.body.user;
+    let user = req.cookies.user;
     user = await userHandler.findUser({_id: user._id});
     const books = await bookHandler.showDashboardBook(user);
     res.render('dashboard', {data: books});
 }
 
 async function postSaveProfile(req, res) {
-    // const userId = req.params.userId;
-    // let userInfo = await userHandler.findUser(userId);
-    let userId = req.body.user._id;
+    let userId = req.cookies.user._id;
     await userHandler.editUser(userId, req.body);
     userInfo = await userHandler.findUser({_id: userId});
     
@@ -42,7 +39,7 @@ async function postAddbook(req, res) {
     const bookImage = req.file;
     newBook.image = bookImage.filename;
     
-    let user = req.body.user;
+    let user = req.cookies.user;
     user = await userHandler.findUser({_id: user._id});
     await bookHandler.createBook(newBook, user);
 
@@ -71,8 +68,8 @@ async function postEditBook (req, res) {
 
 async function getRemoveBook(req, res) { 
     const bookId =  req.params.bookId;    
-    await bookHandler.removeBook(bookId);  
-    const user = req.body.user;
+    await bookHandler.removeBook({_id: bookId});
+    const user = req.cookies.user;
     const books = await bookHandler.showDashboardBook(user);
     res.render('dashboard', {data: books});
 }
