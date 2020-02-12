@@ -5,13 +5,14 @@ module.exports = function(req, res, next){
     if(req.cookies.token){
         const token = userHandler.verifyToken(req.cookies.token);
         if(token){
-            req.body.user = token;
+            req.cookies.user = token;
+            console.log('in middleware', req.body);
             next();
         }else{
-            next(new Error('You are not authenticated user.'));
+            next(new Error('You are not an authentic user.'));
         }
 
     }else{
-        next(new Error('Token is not provided.'));
+        next(new Error('Unauthorized Access!'));
     }    
 };

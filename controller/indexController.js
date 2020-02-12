@@ -117,7 +117,6 @@ async function getRegister(req, res) {
 
 async function postLogin(req, res) {
     let user = req.body;
-    console.log('user from body', user);
     const validation = await userHandler.loginValidate(user);
     const books = await bookHandler.showBook();
 
@@ -126,7 +125,7 @@ async function postLogin(req, res) {
         res.render('login', {info: message});
     }      
     else{
-        user = await userHandler.findUser({username: user.username});
+        user = await userHandler.findUser({username: user.username});        
         const token = await user.getAuthToken();
         res.cookie('token', token);
 
@@ -161,6 +160,7 @@ async function postRegister (req, res) {
     }
     else{
         const user = await userHandler.findUser({username: req.body.username});
+
         const token = await user.getAuthToken();
         res.cookie('token', token);
         const data = {
