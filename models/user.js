@@ -39,11 +39,11 @@ async function createUser(Auser){
 }
 
 async function editUser(userId, userInfo){
-    await User.updateOne({_id: userId}, {$set: userInfo});
+   return await User.updateOne({_id: userId}, {$set: userInfo});
 }
 
 async function removeUser(userId){
-    await User.deleteOne({_id: userId});
+   return await User.deleteOne({_id: userId});
 }
 
 async function formInfoValidate(user){
@@ -70,7 +70,7 @@ async function loginValidate(user){
 }
 
 async function findUser(user){
-    userInfo = await User.findOne(user);
+    userInfo = await User.findOne(user).select({password: 0});
 
     if(userInfo)
         return userInfo;
@@ -79,7 +79,7 @@ async function findUser(user){
 }
 
 async function findAllUser(){
-    return await User.find();
+    return await User.find().select({password: 0});
 }
 
 module.exports = {

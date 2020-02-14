@@ -3,39 +3,51 @@ const bookHandler = require('../models/book');
 
 async function getAllUser (req, res) {
     let users = await userHandler.findAllUser();
-    users = users.filter( (user) => user.username!=='admin');  
+    users = users.filter( (user) => user.username!=='admin');
+    res.json(users);
+};
 
-    res.render('alluser', {users: users});
+async function getSingleUser (req, res) {
+    let userId = req.params.userId;
+    let user = await userHandler.findUser({_id: userId});
+    res.json(user);
 };
 
 async function getAllBook (req, res) {
     let books = await bookHandler.findAllBook();
-    res.render('allbook', {data: books});
+    res.json(books);
 };
 
-async function getRemoveUser (req, res) {
+async function getSingleBook (req, res) {
+    let bookId = req.params.bookId;
+    let book = await bookHandler.findSingleBook({_id: bookId});
+    res.json(book);
+};
+
+async function RemoveUser (req, res) {
     const userId = req.params.userId;
-    await bookHandler.removeUserBook({_id: userId});
-    await userHandler.removeUser(userId);
+    const msg1 = await bookHandler.removeUserBook({_id: userId});
+    const msg2 = await userHandler.removeUser(userId);
     
-    let users = await userHandler.findAllUser();
-    users = users.filter( (user) => user.username!=='admin');  
-
-    res.render('alluser', {users: users});
+    const result = {
+       message: [msg1, msg2]
+    };
+    res.json(result);
 };
 
-async function getRemoveBook(req, res) {
+async function RemoveBook(req, res) {
     const bookId = req.params.bookId;
-    await bookHandler.removeBook({_id: bookId});
-    
-    let books = await bookHandler.findAllBook();   
+    const message = await bookHandler.removeBook({_id: bookId});
+    const result = {message};
 
-    res.render('allbook', {data: books});
+    res.json(result);
 };
 
 module.exports = {
     getAllUser,
+    getSingleUser,
     getAllBook,
-    getRemoveUser,
-    getRemoveBook
+    getSingleBook,
+    RemoveUser,
+    RemoveBook
 };

@@ -2,9 +2,8 @@ const Joi = require('@hapi/joi');
 const {loginSchema, registrationSchema, bookSchema} = require('../models/validationSchema');
 
 async function loginFormValidate(req, res, next){
-    const user = req.body;
     try{
-        await loginSchema.validateAsync(user);
+        req.body = await loginSchema.validateAsync(req.body);
         next();
     }
     catch(err){
@@ -12,14 +11,13 @@ async function loginFormValidate(req, res, next){
         for(d of err.details){
             errmsg+=d.message;              /// concat all the error message
         }
-        res.render('login', {info: errmsg});
+        res.json({error: errmsg});
     }
 }
 
 async function regFormValidate(req, res, next){
-    const user = req.body;
     try{
-        await registrationSchema.validateAsync(user);
+        req.body = await registrationSchema.validateAsync(req.body);
         next();
     }
     catch(err){
@@ -27,15 +25,13 @@ async function regFormValidate(req, res, next){
         for(d of err.details){
             errmsg+=d.message;              /// concat all the error message
         }
-        res.render('register', {info: errmsg});
+        res.json({error: errmsg});
     }
 }
 
 async function bookFormValidate(req, res, next){
-    const book = req.body;
     try{
-        console.log(book);
-        await bookSchema.validateAsync(book);
+        req.body = await bookSchema.validateAsync(req.body);
         next();
     }
     catch(err){
@@ -43,7 +39,7 @@ async function bookFormValidate(req, res, next){
         for(d of err.details){
             errmsg+=d.message;              /// concat all the error message
         }
-        res.render('addbooks', {info: errmsg});
+        res.json({error: errmsg});
     }
 }
 

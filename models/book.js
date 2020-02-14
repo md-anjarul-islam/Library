@@ -19,15 +19,18 @@ async function createBook(Abook, user){
     Abook.modifier = user._id;
     
     const newBook = new Book(Abook);
-    await newBook.save();
+    return await newBook.save();
 }
 
 async function editBook(bookId, info){
-    const books = await Book.updateOne({_id: bookId}, {$set: info});
+    return await Book.updateOne({_id: bookId}, {$set: info});
 }
 
 async function removeBook(book){
     book = await Book.findOne(book);
+
+    if(!book)   return "No Book Found!";
+
     const location = path.join(__dirname, '../', 'public/uploads',book.image);
     // console.log(location);
     fs.unlink(location, (err) => {
@@ -36,13 +39,13 @@ async function removeBook(book){
         else
             console.log('Image file deleted successfully');
     })
-    await Book.deleteOne({_id: book._id});
+   return await Book.deleteOne({_id: book._id});
 }
 
 async function removeUserBook(user){
     books = await Book.find({modifier: user._id});
     const basepath = path.join(__dirname, '../', 'public/uploads');
-
+    let message = '';
     books.forEach( async (book) => {
         const location = path.join(basepath, book.image);
         fs.unlink(location, (err) => {
@@ -51,12 +54,13 @@ async function removeUserBook(user){
             else
                 console.log('Image file deleted successfully', book.image);
         })
-        await Book.deleteOne({_id: book._id});
+       message+= await Book.deleteOne({_id: book._id});
     });
+    return message;
 }
 
-async function showBook(){
-   return await Book.find();
+async function findSingleBook(book){
+   return await Book.findOne(book);
 }
 
 async function showDashboardBook(user){
@@ -86,7 +90,7 @@ module.exports = {
     editBook,
     removeBook,
     searchBook,
-    showBook,
+    findSingleBook,
     findAllBook,
     showDashboardBook,
     removeUserBook

@@ -12,7 +12,7 @@ const registrationSchema = Joi.object({
     fullname: Joi.string().min(5).max(30).optional().default(Joi.ref('username')),
     email: Joi.string().min(6).max(40).regex(/^[a-zA-Z][a-zA-Z0-9]*@(gmail|yahoo|hotmail)\.(com|net)$/).required(),
     password: Joi.string().min(5).max(20).regex(/^[a-zA-Z0-9]+[@\$][a-zA-Z0-9]*$/).required(),
-    confirmpass: Joi.string().valid(Joi.ref('password'))
+    confirmpass: Joi.string().valid(Joi.ref('password')).required()
 });
 
 // image and modifier wiil be verified further
@@ -23,7 +23,7 @@ const bookSchema = Joi.object({
     isbn        : Joi.string().max(40).optional(),
     rating      : Joi.number().precision(2).optional().max(10).default(0),
     seller      : Joi.string().max(30).optional(),
-    modifier    : Joi.string().max(30).optional(),
+    modifier    : Joi.string().max(30).forbidden(),
     image       : Joi.any()
 });
 

@@ -1,37 +1,41 @@
 const userHandler = require('../models/user');
 const bookHandler = require('../models/book');
 
-async function getProfile (req, res) {
-    let user = req.cookies.user;
-    user = await userHandler.findUser({_id: user._id});
-    res.render('profile', {userInfo: user});
+async function getProfile(req, res) {
+    let user = req.headers.user;
+    userInfo = await userHandler.findUser({_id: user._id});
+    res.json(userInfo);
 }
 
-async function getEditProfile(req, res)  {
-    let user = req.cookies.user;
-    user = await userHandler.findUser({_id: user._id});
+// async function getEditProfile(req, res)  {
+//     let user = req.headers.user;
+//     user = await userHandler.findUser({_id: user._id});
 
-    if(user)
-        res.render('editprofile', {userInfo: user});
+//     if(user)
+//         res.json('editprofile', {userInfo: user});
+// }
+
+// function getAddbook (req, res) {
+//     res.json('addbooks');
+// }
+
+async function getUserBooks(req, res) {    
+    let user = req.headers.user;
+    const books = await bookHandler.showDashboardBook({_id: user._id});
+    res.json(books);
+}
+async function getUsersSingleBook(req, res) {    
+    let user = req.headers.user;
+    const books = await bookHandler.findSingleBook({modifier: user._id});
+    res.json(books);
 }
 
-function getAddbook (req, res) {
-    res.render('addbooks');
-}
-
-async function getDashboard(req, res) {    
-    let user = req.cookies.user;
-    user = await userHandler.findUser({_id: user._id});
-    const books = await bookHandler.showDashboardBook(user);
-    res.render('dashboard', {data: books});
-}
-
-async function postSaveProfile(req, res) {
-    let userId = req.cookies.user._id;
+async function updateProfile(req, res) {
+    let userId = req.headers.user._id;
     await userHandler.editUser(userId, req.body);
     userInfo = await userHandler.findUser({_id: userId});
     
-    res.render('profile', {userInfo: userInfo});
+    res.json(userInfo);
 }
 
 async function postAddbook(req, res) { 
@@ -39,54 +43,38 @@ async function postAddbook(req, res) {
     const bookImage = req.file;
     newBook.image = bookImage.filename;
     
-    let user = req.cookies.user;
+    let user = req.headers.user;
     user = await userHandler.findUser({_id: user._id});
-    await bookHandler.createBook(newBook, user);
-
-    const books = await bookHandler.showBook();
-
-    const data = {
-        books,
-        userInfo    : user,
-        link_name   : ['/user/dashboard', '/logout'],
-        link_msg    : ['Dashboard', 'Log Out']   
-    }
-    res.render('home', {data: data});
+    const message = await bookHandler.createBook(newBook, user);
+    const result = { message };
+    res.json(result);
 }
 
-async function postEditBook (req, res) { 
+async function EditBook (req, res) { 
     const bookId =  req.params.bookId;
     const bookInfo = req.body;
 
     bookInfo.image = req.file.filename;
-    await bookHandler.editBook(bookId, bookInfo);  
-    let token = req.cookies.token;
-    token = userHandler.verifyToken(token);
-    if(token){
-        // if token is valid then take the user id from the token
-        const books = await bookHandler.showDashboardBook({_id: token._id});
-        res.render('dashboard', {data: books});
-    }else{
-        const error = new Error('Token does not match.')
-        res.render('error', {error: error});
-    }
+    const message = await bookHandler.editBook(bookId, bookInfo);  
+    const result = {message};
+    res.json(result);
 }
 
-async function getRemoveBook(req, res) { 
+async function RemoveBook(req, res) { 
     const bookId =  req.params.bookId;    
-    await bookHandler.removeBook({_id: bookId});
-    const user = req.cookies.user;
-    const books = await bookHandler.showDashboardBook(user);
-    res.render('dashboard', {data: books});
+    const message = await bookHandler.removeBook({_id: bookId});
+    const result = {message};
+    res.json(result);
 }
 
 module.exports = {
     getProfile,
-    getEditProfile,
-    getAddbook,    
-    getDashboard,
-    postSaveProfile,
+    // getEditProfile,
+    // getAddbook,    
+    getUserBooks,
+    getUsersSingleBook,
+    updateProfile,
     postAddbook,
-    postEditBook,
-    getRemoveBook
+    EditBook,
+    RemoveBook
 };

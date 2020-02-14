@@ -8,6 +8,7 @@ dotenv.config();
 const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
 const indexRouter = require('./routes/index');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -20,6 +21,8 @@ app.use(express.static(path.join(__dirname, 'public'))); // configure express to
 app.use('/user', userRouter);
 app.use('/admin', adminRouter);
 app.use('/', indexRouter);
+
+app.use(errorHandler);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log('The Server is running...'));
