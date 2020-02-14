@@ -60,10 +60,16 @@ async function postEditBook (req, res) {
 
     bookInfo.image = req.file.filename;
     await bookHandler.editBook(bookId, bookInfo);  
-    // const user = await userHandler.loggedUser();
-
-    const books = await bookHandler.showDashboardBook(user);
-    res.render('dashboard', {data: books});
+    let token = req.cookies.token;
+    token = userHandler.verifyToken(token);
+    if(token){
+        // if token is valid then take the user id from the token
+        const books = await bookHandler.showDashboardBook({_id: token._id});
+        res.render('dashboard', {data: books});
+    }else{
+        const error = new Error('Token does not match.')
+        res.render('error', {error: error});
+    }
 }
 
 async function getRemoveBook(req, res) { 
