@@ -7,19 +7,7 @@ async function getProfile(req, res) {
     res.json(userInfo);
 }
 
-// async function getEditProfile(req, res)  {
-//     let user = req.headers.user;
-//     user = await userHandler.findUser({_id: user._id});
-
-//     if(user)
-//         res.json('editprofile', {userInfo: user});
-// }
-
-// function getAddbook (req, res) {
-//     res.json('addbooks');
-// }
-
-async function getUserBooks(req, res) {    
+async function getUserBooks(req, res) {
     let user = req.headers.user;
     const books = await bookHandler.showDashboardBook({_id: user._id});
     res.json(books);
@@ -45,6 +33,7 @@ async function postAddbook(req, res) {
     
     let user = req.headers.user;
     user = await userHandler.findUser({_id: user._id});
+    
     const message = await bookHandler.createBook(newBook, user);
     const result = { message };
     res.json(result);

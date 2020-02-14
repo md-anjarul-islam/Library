@@ -30,16 +30,18 @@ async function removeBook(book){
     book = await Book.findOne(book);
 
     if(!book)   return "No Book Found!";
-
-    const location = path.join(__dirname, '../', 'public/uploads',book.image);
-    // console.log(location);
-    fs.unlink(location, (err) => {
-        if(err)
-            console.log('Error deleting image file');
-        else
-            console.log('Image file deleted successfully');
-    })
-   return await Book.deleteOne({_id: book._id});
+    else if(!book.image)    return await Book.deleteOne({_id: book._id});   // no image found. just delete the book from db
+    else{
+        // delete image from server and then delete from database
+        const location = path.join(__dirname, '../', 'public/uploads',book.image);
+        fs.unlink(location, (err) => {
+            if(err)
+                console.log('Error deleting image file');
+            else
+                console.log('Image file deleted successfully');
+        })
+        return await Book.deleteOne({_id: book._id});
+    }
 }
 
 async function removeUserBook(user){
@@ -47,13 +49,16 @@ async function removeUserBook(user){
     const basepath = path.join(__dirname, '../', 'public/uploads');
     let message = '';
     books.forEach( async (book) => {
-        const location = path.join(basepath, book.image);
-        fs.unlink(location, (err) => {
-            if(err)
-                console.log('Error deleting image file', book.image);
-            else
-                console.log('Image file deleted successfully', book.image);
-        })
+        // if the book has an image then delete it first from server.
+        if(book.image){
+            const location = path.join(basepath, book.image);
+            fs.unlink(location, (err) => {
+                if(err)
+                    console.log('Error deleting image file', book.image);
+                else
+                    console.log('Image file deleted successfully', book.image);
+            })
+        }        
        message+= await Book.deleteOne({_id: book._id});
     });
     return message;

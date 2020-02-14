@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public'))); // configure express to use public folder
 
-app.use('/user', userRouter);
+app.use('/users', userRouter);
 app.use('/admin', adminRouter);
 app.use('/', indexRouter);
 

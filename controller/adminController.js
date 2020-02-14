@@ -29,10 +29,7 @@ async function RemoveUser (req, res) {
     const msg1 = await bookHandler.removeUserBook({_id: userId});
     const msg2 = await userHandler.removeUser(userId);
     
-    const result = {
-       message: [msg1, msg2]
-    };
-    res.json(result);
+    res.json({ message: [msg1, msg2] });
 };
 
 async function RemoveBook(req, res) {

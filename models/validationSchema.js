@@ -24,7 +24,7 @@ const bookSchema = Joi.object({
     rating      : Joi.number().precision(2).optional().max(10).default(0),
     seller      : Joi.string().max(30).optional(),
     modifier    : Joi.string().max(30).forbidden(),
-    image       : Joi.any()
+    image       : Joi.any().required()
 });
 
 module.exports = {

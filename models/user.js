@@ -12,7 +12,7 @@ const userSchema = new db.Schema({
 
 userSchema.methods.getAuthToken = function(){
     const payload = {_id: this._id};
-    const token = jwt.sign(payload, secretKey);
+    const token = jwt.sign(payload, secretKey, {expiresIn: "1 hour"});
     return token;
 }
 
