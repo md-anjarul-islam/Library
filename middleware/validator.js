@@ -11,7 +11,8 @@ async function loginFormValidate(req, res, next){
         for(d of err.details){
             errmsg+=d.message;              /// concat all the error message
         }
-        res.json({error: errmsg});
+        res.status(400);
+        res.json({message: "Bad request"});
     }
 }
 
@@ -25,17 +26,14 @@ async function regFormValidate(req, res, next){
         for(d of err.details){
             errmsg+=d.message;              /// concat all the error message
         }
-        res.json({error: errmsg});
+        res.status(400)
+        res.json({message: "Bad request"});
     }
 }
 
 async function userUpdateFormValidate(req, res, next){
     try{
-        console.log(req.body);
-
         req.body = await userUpdateSchema.validateAsync(req.body);
-        console.log(req.body);
-
         next();
     }
     catch(err){
@@ -43,7 +41,8 @@ async function userUpdateFormValidate(req, res, next){
         for(d of err.details){
             errmsg+=d.message;              /// concat all the error message
         }
-        res.json({error: err});
+        res.status(400);
+        res.json({message: "Bad request"});
     }
 }
 
@@ -57,7 +56,8 @@ async function bookFormValidate(req, res, next){
         for(d of err.details){
             errmsg+=d.message;              /// concat all the error message
         }
-        res.json({error: errmsg});
+        res.status(400);
+        res.json({message: "Bad request"});
     }
 }
 
@@ -71,7 +71,8 @@ async function bookUpdateFormValidate(req, res, next){
         for(d of err.details){
             errmsg+=d.message;              /// concat all the error message
         }
-        res.json({error: errmsg});
+        res.status(400);
+        res.json({message: "Bad request"});
     }
 }
 

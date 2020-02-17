@@ -18,8 +18,8 @@ async function verify_user(req, res, next){
     if(req.params.userId && req.params.userId === user._id) // the requested user ID matches with the credentials ID
         next();
     else{
-        res.status(400);
-        next(new Error('Bad Request!'));
+        res.status(401);
+        next(new Error('Unauthorized Access!'));
     }
 }
 
@@ -30,8 +30,8 @@ async function verify_modifier(req, res, next){
 
     const result = await bookHandler.findSingleBook({_id: bookId, modifier: user._id}); // find book using the bookID and modifier
     if(!result) {
-        res.status(404);            // The book is not found
-        next(new Error('Not Found!'));
+        res.status(401);            // The book is not found
+        next(new Error('Unauthorized Access!'));
     }
     else
         next();
