@@ -38,7 +38,9 @@ async function updateProfile(req, res) {
 async function postAddbook(req, res) { 
     const newBook = req.body;
     const bookImage = req.file;
-    newBook.image = bookImage.filename;
+    
+    if(bookImage)
+        newBook.image = bookImage.filename;
     
     let user = req.headers.user;
     user = await userHandler.findUser({_id: user._id});    
@@ -56,7 +58,8 @@ async function EditBook (req, res) {
     const bookId =  req.params.bookId;
     const bookInfo = req.body;
 
-    bookInfo.image = req.file.filename;
+    if(req.file)
+        bookInfo.image = req.file.filename;
     await bookHandler.editBook(bookId, bookInfo);  
     const updatedBook = await bookHandler.findSingleBook(bookInfo);
     res.json(updatedBook);
@@ -64,7 +67,7 @@ async function EditBook (req, res) {
 
 async function RemoveBook(req, res) { 
     const bookId =  req.params.bookId;
-    const book = await bookHandler.findSingleBook(bookInfo);
+    const book = await bookHandler.findSingleBook({_id: bookId});
 
     if(!book) {
         res.status(404);

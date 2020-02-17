@@ -79,7 +79,10 @@ async function removeUserBook(user){
 }
 
 async function findSingleBook(book){
-   return await Book.findOne(book);
+    if(book._id && book._id.length !== 24)  
+        return null;
+   else
+        return await Book.findOne(book);
 }
 
 async function findUsersBook(user){

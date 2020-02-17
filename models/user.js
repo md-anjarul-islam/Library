@@ -35,7 +35,6 @@ async function createUser(Auser){
         return false;
     Auser.password = await bcrypt.hash(Auser.password, 10);
     const newUser = new User(Auser);
-    newUser.flag = true;
     return await newUser.save();
 }
 

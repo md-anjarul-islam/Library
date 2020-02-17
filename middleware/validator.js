@@ -12,7 +12,7 @@ async function loginFormValidate(req, res, next){
             errmsg+=d.message;              /// concat all the error message
         }
         res.status(400);
-        res.json({message: "Bad request"});
+        res.json({message: errmsg});
     }
 }
 
@@ -27,7 +27,7 @@ async function regFormValidate(req, res, next){
             errmsg+=d.message;              /// concat all the error message
         }
         res.status(400)
-        res.json({message: "Bad request"});
+        res.json({message: errmsg});
     }
 }
 
@@ -42,7 +42,7 @@ async function userUpdateFormValidate(req, res, next){
             errmsg+=d.message;              /// concat all the error message
         }
         res.status(400);
-        res.json({message: "Bad request"});
+        res.json({message: errmsg});
     }
 }
 
@@ -57,7 +57,7 @@ async function bookFormValidate(req, res, next){
             errmsg+=d.message;              /// concat all the error message
         }
         res.status(400);
-        res.json({message: "Bad request"});
+        res.json({message: errmsg});
     }
 }
 
@@ -72,7 +72,7 @@ async function bookUpdateFormValidate(req, res, next){
             errmsg+=d.message;              /// concat all the error message
         }
         res.status(400);
-        res.json({message: "Bad request"});
+        res.json({message: errmsg});
     }
 }
 
