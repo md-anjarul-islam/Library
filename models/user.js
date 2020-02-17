@@ -7,11 +7,12 @@ const userSchema = new db.Schema({
     username    : String,
     fullname    : String,
     email       : String,
-    password    : String
+    password    : String,
+    isAdmin     : Boolean
 });
 
 userSchema.methods.getAuthToken = function(){
-    const payload = {_id: this._id};
+    const payload = {_id: this._id, isAdmin: this.isAdmin};
     const token = jwt.sign(payload, secretKey, {expiresIn: "1 hour"});
     return token;
 }
@@ -39,6 +40,10 @@ async function createUser(Auser){
 }
 
 async function editUser(userId, userInfo){
+    if(userInfo.password){
+        userInfo.password = await bcrypt.hash(userInfo.password, 10);
+        // delete userInfo.confirmpass;
+   }
    return await User.updateOne({_id: userId}, {$set: userInfo});
 }
 

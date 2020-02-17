@@ -22,8 +22,22 @@ async function createBook(Abook, user){
     return await newBook.save();
 }
 
-async function editBook(bookId, info){
-    return await Book.updateOne({_id: bookId}, {$set: info});
+async function editBook(bookId, newInfo){
+    // The new image has already been saved by multer middleware
+    // If an old image exists then delete it
+    if(newInfo.image){
+        const oldBook = Book.findOne({_id: bookId});
+        if(oldBook.image){
+            const location = path.join(__dirname, '../', 'public/uploads',oldBook.image);
+            fs.unlink(location, (err) => {
+                if(err)
+                    console.log('Error deleting image file');
+                else
+                    console.log('Image file deleted successfully');
+            })
+        }
+    }
+    return await Book.updateOne({_id: bookId}, {$set: newInfo});
 }
 
 async function removeBook(book){
@@ -68,7 +82,7 @@ async function findSingleBook(book){
    return await Book.findOne(book);
 }
 
-async function showDashboardBook(user){
+async function findUsersBook(user){
     return await Book.find({modifier: user._id});
 }
 
@@ -97,6 +111,6 @@ module.exports = {
     searchBook,
     findSingleBook,
     findAllBook,
-    showDashboardBook,
+    findUsersBook,
     removeUserBook
 };

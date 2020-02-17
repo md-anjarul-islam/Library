@@ -3,14 +3,19 @@ const bookHandler = require('../models/book');
 
 async function getAllUser (req, res) {
     let users = await userHandler.findAllUser();
-    users = users.filter( (user) => user.username!=='admin');
+    users = users.filter( (user) => user.isAdmin !== true);  
     res.json(users);
 };
 
 async function getSingleUser (req, res) {
     let userId = req.params.userId;
     let user = await userHandler.findUser({_id: userId});
-    res.json(user);
+    if(!user){
+        res.status(404);
+        res.json({message: "No user found!"});
+    }
+    else
+        res.json(user);
 };
 
 async function getAllBook (req, res) {
@@ -21,23 +26,40 @@ async function getAllBook (req, res) {
 async function getSingleBook (req, res) {
     let bookId = req.params.bookId;
     let book = await bookHandler.findSingleBook({_id: bookId});
-    res.json(book);
+    if(!book){
+        res.status(404);
+        res.json({message: "No book found!"});
+    }
+    else
+        res.json(book);
 };
 
 async function RemoveUser (req, res) {
     const userId = req.params.userId;
-    const msg1 = await bookHandler.removeUserBook({_id: userId});
-    const msg2 = await userHandler.removeUser(userId);
-    
-    res.json({ message: [msg1, msg2] });
+    const user = await userHandler.findUser({_id: userId});
+    if(!user){
+        res.status(404);
+        res.json({message: "No user found!"});
+    }
+    else{
+        await bookHandler.removeUserBook({_id: userId});
+        await userHandler.removeUser(userId);
+        
+        res.json({ message: "User removed successfully." });
+    }
 };
 
 async function RemoveBook(req, res) {
     const bookId = req.params.bookId;
-    const message = await bookHandler.removeBook({_id: bookId});
-    const result = {message};
-
-    res.json(result);
+    let book = await bookHandler.findSingleBook({_id: bookId});
+    if(!book){
+        res.status(404);
+        res.json({message: "No book found!"});
+    }
+    else{
+        await bookHandler.removeBook({_id: bookId});    
+        res.json({message: "Book removed successfully"});
+    }
 };
 
 module.exports = {

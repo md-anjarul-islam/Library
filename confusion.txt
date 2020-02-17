@@ -1,0 +1,5 @@
+1. The status code for (the requested book does not exist)
+2. The response body and status code for (The user updated his profile information successfully.)
+3. Deletion Response
+4. What should be the status if the user provides incomplete information for registering/login
+5. Mongoose fails to convert a number into object

@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const {loginSchema, registrationSchema, bookSchema} = require('../models/validationSchema');
+const {loginSchema, registrationSchema, bookSchema, userUpdateSchema, bookupDateSchema} = require('../models/validationSchema');
 
 async function loginFormValidate(req, res, next){
     try{
@@ -29,6 +29,24 @@ async function regFormValidate(req, res, next){
     }
 }
 
+async function userUpdateFormValidate(req, res, next){
+    try{
+        console.log(req.body);
+
+        req.body = await userUpdateSchema.validateAsync(req.body);
+        console.log(req.body);
+
+        next();
+    }
+    catch(err){
+        let errmsg = "";
+        for(d of err.details){
+            errmsg+=d.message;              /// concat all the error message
+        }
+        res.json({error: err});
+    }
+}
+
 async function bookFormValidate(req, res, next){
     try{
         req.body = await bookSchema.validateAsync(req.body);
@@ -43,8 +61,24 @@ async function bookFormValidate(req, res, next){
     }
 }
 
+async function bookUpdateFormValidate(req, res, next){
+    try{
+        req.body = await bookupDateSchema.validateAsync(req.body);
+        next();
+    }
+    catch(err){
+        let errmsg = "";
+        for(d of err.details){
+            errmsg+=d.message;              /// concat all the error message
+        }
+        res.json({error: errmsg});
+    }
+}
+
 module.exports = {
     loginFormValidate,
     regFormValidate,
-    bookFormValidate
+    userUpdateFormValidate,
+    bookFormValidate,
+    bookUpdateFormValidate
 };

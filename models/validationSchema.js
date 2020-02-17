@@ -15,6 +15,14 @@ const registrationSchema = Joi.object({
     confirmpass: Joi.string().valid(Joi.ref('password')).required()
 });
 
+const userUpdateSchema = Joi.object({
+    username: Joi.forbidden(),
+    fullname: Joi.string().min(5).max(30).optional(),
+    email: Joi.forbidden(),
+    password: Joi.string().min(5).max(20).regex(/^[a-zA-Z0-9]+[@\$][a-zA-Z0-9]*$/).optional()
+    // confirmpass: Joi.when(Joi.ref('password'))
+    // Joi.string().valid(Joi.ref('password')).required()
+});
 // image and modifier wiil be verified further
 const bookSchema = Joi.object({
     title       : Joi.string().max(30).required(),
@@ -23,12 +31,23 @@ const bookSchema = Joi.object({
     isbn        : Joi.string().max(40).optional(),
     rating      : Joi.number().precision(2).optional().max(10).default(0),
     seller      : Joi.string().max(30).optional(),
-    modifier    : Joi.string().max(30).forbidden(),
-    image       : Joi.any().required()
+    modifier    : Joi.string().max(30).forbidden()
+});
+
+const bookupDateSchema = Joi.object({
+    title       : Joi.string().max(30).optional(),
+    description : Joi.string().max(250).optional(),
+    author      : Joi.string().max(30).optional(),
+    isbn        : Joi.string().max(40).optional(),
+    rating      : Joi.number().precision(2).optional(),
+    seller      : Joi.string().max(30).optional(),
+    modifier    : Joi.string().max(30).forbidden()
 });
 
 module.exports = {
     loginSchema,
     registrationSchema,
-    bookSchema
+    userUpdateSchema,
+    bookSchema,
+    bookupDateSchema
 }

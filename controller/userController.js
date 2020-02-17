@@ -9,18 +9,27 @@ async function getProfile(req, res) {
 
 async function getUserBooks(req, res) {
     let user = req.headers.user;
-    const books = await bookHandler.showDashboardBook({_id: user._id});
+    const books = await bookHandler.findUsersBook({_id: user._id});
     res.json(books);
 }
 async function getUsersSingleBook(req, res) {    
     let user = req.headers.user;
-    const books = await bookHandler.findSingleBook({modifier: user._id});
-    res.json(books);
+    let bookId = req.params.bookId;
+
+    const book = await bookHandler.findSingleBook({_id: bookId, modifier: user._id});
+    if(!book){
+        res.status(404);
+        res.json({message: "No book found"});
+    }
+    else
+        res.json(book);
 }
 
 async function updateProfile(req, res) {
     let userId = req.headers.user._id;
-    await userHandler.editUser(userId, req.body);
+    let userInfo = req.body;
+
+    await userHandler.editUser(userId, userInfo);
     userInfo = await userHandler.findUser({_id: userId});
     
     res.json(userInfo);
@@ -32,11 +41,15 @@ async function postAddbook(req, res) {
     newBook.image = bookImage.filename;
     
     let user = req.headers.user;
-    user = await userHandler.findUser({_id: user._id});
-    
-    const message = await bookHandler.createBook(newBook, user);
-    const result = { message };
-    res.json(result);
+    user = await userHandler.findUser({_id: user._id});    
+    await bookHandler.createBook(newBook, user);
+
+    const book = await bookHandler.findSingleBook(newBook);
+    const locationHeader = `users/${user._id}/books/${book._id}`;
+
+    res.status(201);
+    res.set({'locationHeader': locationHeader});
+    res.json(book);
 }
 
 async function EditBook (req, res) { 
@@ -44,22 +57,27 @@ async function EditBook (req, res) {
     const bookInfo = req.body;
 
     bookInfo.image = req.file.filename;
-    const message = await bookHandler.editBook(bookId, bookInfo);  
-    const result = {message};
-    res.json(result);
+    await bookHandler.editBook(bookId, bookInfo);  
+    const updatedBook = await bookHandler.findSingleBook(bookInfo);
+    res.json(updatedBook);
 }
 
 async function RemoveBook(req, res) { 
-    const bookId =  req.params.bookId;    
-    const message = await bookHandler.removeBook({_id: bookId});
-    const result = {message};
-    res.json(result);
+    const bookId =  req.params.bookId;
+    const book = await bookHandler.findSingleBook(bookInfo);
+
+    if(!book) {
+        res.status(404);
+        res.json({message: "No book found"});
+    }
+    else{
+        await bookHandler.removeBook({_id: bookId});        
+        res.json({message: 'Book removed successfully'});
+    }    
 }
 
 module.exports = {
     getProfile,
-    // getEditProfile,
-    // getAddbook,    
     getUserBooks,
     getUsersSingleBook,
     updateProfile,
