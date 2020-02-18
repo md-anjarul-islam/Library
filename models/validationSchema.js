@@ -19,11 +19,9 @@ const userUpdateSchema = Joi.object({
     username: Joi.forbidden(),
     fullname: Joi.string().min(5).max(30).optional(),
     email: Joi.forbidden(),
-    password: Joi.string().min(5).max(20).regex(/^[a-zA-Z0-9]+[@\$][a-zA-Z0-9]*$/).optional()
-    // confirmpass: Joi.when(Joi.ref('password'))
-    // Joi.string().valid(Joi.ref('password')).required()
+    password: Joi.string().min(5).max(20).regex(/^[a-zA-Z0-9]+[@\$][a-zA-Z0-9]*$/).optional()    
 });
-// image and modifier wiil be verified further
+
 const bookSchema = Joi.object({
     title       : Joi.string().max(30).required(),
     description : Joi.string().max(250).optional(),

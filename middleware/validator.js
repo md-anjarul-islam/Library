@@ -7,12 +7,12 @@ async function loginFormValidate(req, res, next){
         next();
     }
     catch(err){
-        let errmsg = "";
-        for(d of err.details){
-            errmsg+=d.message;              /// concat all the error message
+        let errMessage = "";
+        for(details of err.details){
+            errMessage+=details.message;              /// concat all the error message
         }
         res.status(400);
-        res.json({message: errmsg});
+        res.json({message: errMessage});
     }
 }
 
@@ -22,12 +22,12 @@ async function regFormValidate(req, res, next){
         next();
     }
     catch(err){
-        let errmsg = "";
-        for(d of err.details){
-            errmsg+=d.message;              /// concat all the error message
+        let errMessage = "";
+        for(details of err.details){
+            errMessage+=details.message;              /// concat all the error message
         }
-        res.status(400)
-        res.json({message: errmsg});
+        res.status(400);
+        res.json({message: errMessage});
     }
 }
 
@@ -37,12 +37,12 @@ async function userUpdateFormValidate(req, res, next){
         next();
     }
     catch(err){
-        let errmsg = "";
-        for(d of err.details){
-            errmsg+=d.message;              /// concat all the error message
+        let errMessage = "";
+        for(details of err.details){
+            errMessage+=details.message;              /// concat all the error message
         }
         res.status(400);
-        res.json({message: errmsg});
+        res.json({message: errMessage});
     }
 }
 
@@ -52,12 +52,12 @@ async function bookFormValidate(req, res, next){
         next();
     }
     catch(err){
-        let errmsg = "";
-        for(d of err.details){
-            errmsg+=d.message;              /// concat all the error message
+        let errMessage = "";
+        for(details of err.details){
+            errMessage+=details.message;              /// concat all the error message
         }
         res.status(400);
-        res.json({message: errmsg});
+        res.json({message: errMessage});
     }
 }
 
@@ -67,12 +67,12 @@ async function bookUpdateFormValidate(req, res, next){
         next();
     }
     catch(err){
-        let errmsg = "";
-        for(d of err.details){
-            errmsg+=d.message;              /// concat all the error message
+        let errMessage = "";
+        for(details of err.details){
+            errMessage+=details.message;              /// concat all the error message
         }
         res.status(400);
-        res.json({message: errmsg});
+        res.json({message: errMessage});
     }
 }
 

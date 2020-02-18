@@ -21,8 +21,8 @@ app.use(express.static(path.join(__dirname, 'public'))); // configure express to
 app.use('/users', userRouter);
 app.use('/admin', adminRouter);
 app.use('/', indexRouter);
-
 app.use('*', (req, res) => { res.status(400).json({message: "Bad Request."})});
+
 app.use(errorHandler);
 
 const port = process.env.PORT || 3000;

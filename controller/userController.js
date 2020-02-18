@@ -30,27 +30,23 @@ async function updateProfile(req, res) {
     let userInfo = req.body;
 
     await userHandler.editUser(userId, userInfo);
-    userInfo = await userHandler.findUser({_id: userId});
+    user = await userHandler.findUser({_id: userId});
     
-    res.json(userInfo);
+    res.json(user);
 }
 
 async function postAddbook(req, res) { 
     const newBook = req.body;
     const bookImage = req.file;
-    
+    const userId = req.params.userId;
+
     if(bookImage)
         newBook.image = bookImage.filename;
-    
-    let user = req.headers.user;
-    user = await userHandler.findUser({_id: user._id});    
-    await bookHandler.createBook(newBook, user);
 
+    await bookHandler.createBook(newBook, userId);
     const book = await bookHandler.findSingleBook(newBook);
-    const locationHeader = `users/${user._id}/books/${book._id}`;
 
     res.status(201);
-    res.set({'locationHeader': locationHeader});
     res.json(book);
 }
 

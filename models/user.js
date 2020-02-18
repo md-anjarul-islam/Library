@@ -19,30 +19,22 @@ userSchema.methods.getAuthToken = function(){
 
 const User = new db.model('Users', userSchema);
 
-function verifyToken(token){
-    try{
-        const verifiedUser = jwt.verify(token, secretKey);
-        return verifiedUser;
-    }catch(err){
-        return null;
-    }
-}
+async function createUser(aUser){
+    const conflict = await checkConflict(aUser);
 
-async function createUser(Auser){
-    const validation = await formInfoValidate(Auser);
-
-    if(!validation)
+    if(conflict)
         return false;
-    Auser.password = await bcrypt.hash(Auser.password, 10);
-    const newUser = new User(Auser);
+
+    delete user.confirmpass;
+    aUser.password = await bcrypt.hash(aUser.password, 10);
+    const newUser = new User(aUser);
     return await newUser.save();
 }
 
 async function editUser(userId, userInfo){
-    if(userInfo.password){
+    if(userInfo.password)
         userInfo.password = await bcrypt.hash(userInfo.password, 10);
-        // delete userInfo.confirmpass;
-   }
+
    return await User.updateOne({_id: userId}, {$set: userInfo});
 }
 
@@ -50,40 +42,33 @@ async function removeUser(userId){
    return await User.deleteOne({_id: userId});
 }
 
-async function formInfoValidate(user){
-    if(user.password !== user.confirmpass)
-        return false;
-    delete user.confirmpass;
-    const result = await User.find().or([
-                                        {username: user.username}, 
-                                        {email: user.email}
-                                    ]);
-    return result.length == 0;
+async function checkConflict(user){
+    return await User.findOne().or( [ {username: user.username}, {email: user.email} ]);
 }
 
 async function loginValidate(user){
-    const result = await User.findOne({username: user.username});
-    if(result == null)
+    const validUser = await User.findOne({username: user.username});
+    
+    if( !validUser )
         return false;
-
-    const validation = await bcrypt.compare(user.password, result.password);
-    if(validation)
-        return true;
-    else
-        return false;
+    return await bcrypt.compare(user.password, validUser.password);    
 }
 
-async function findUser(user){
-    userInfo = await User.findOne(user).select({password: 0});
-
-    if(userInfo)
-        return userInfo;
-    else
-        return false;
+async function findUser(userInfo){
+    return await User.findOne(userInfo).select({password: 0});
 }
 
 async function findAllUser(){
     return await User.find().select({password: 0});
+}
+
+function verifyToken(token){
+    try{
+        const verifiedUser = jwt.verify(token, secretKey);
+        return verifiedUser;
+    }catch(err){
+        return null;
+    }
 }
 
 module.exports = {

@@ -8,7 +8,6 @@ const {verify_user, verify_modifier} = require('../middleware/access_control');
 
 router.use(auth);
 
-// authentic user
 router.get('/:userId', verify_user, userController.getProfile);
 router.patch('/:userId', verify_user, userUpdateFormValidate, userController.updateProfile);
 router.get('/:userId/books',verify_user, userController.getUserBooks);

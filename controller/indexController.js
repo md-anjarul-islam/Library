@@ -10,14 +10,13 @@ async function login(req, res) {
     let user = req.body;
     const validation = await userHandler.loginValidate(user);
 
-    if(validation == false){        
+    if(validation == false){
         res.status(401);
         res.json({message: 'The username or password is incorrect.'});
     }      
     else{
         user = await userHandler.findUser({username: user.username});
         const token = await user.getAuthToken();
-        // send token in header
         res.set({'x-token': token});
         res.json(user);
     }
@@ -25,8 +24,8 @@ async function login(req, res) {
 
 async function register (req, res) {        
     const result = await userHandler.createUser(req.body);
-    if(!result){         
-        const message = 'Username and Email should be unique! Please try again using a unique name and email.'
+    if(result == false){         
+        const message = 'Username or Email already exists!';
         res.status(409);
         res.json({message});
     }
@@ -34,10 +33,7 @@ async function register (req, res) {
         const user = await userHandler.findUser({username: req.body.username});
         const token = await user.getAuthToken();        
         res.status(201);
-        res.set({
-                'x-token': token,
-                'locationHeader' : `users/${user._id}`
-            });
+        res.set({'x-token': token});
         res.json(user);
     }
 }
