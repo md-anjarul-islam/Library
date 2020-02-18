@@ -7,12 +7,8 @@ async function loginFormValidate(req, res, next){
         next();
     }
     catch(err){
-        let errMessage = "";
-        for(details of err.details){
-            errMessage+=details.message;              /// concat all the error message
-        }
-        res.status(400);
-        res.json({message: errMessage});
+        let errMessage = getErrorMessages(err);        
+        res.status(400).json({message: errMessage});
     }
 }
 
@@ -22,12 +18,8 @@ async function regFormValidate(req, res, next){
         next();
     }
     catch(err){
-        let errMessage = "";
-        for(details of err.details){
-            errMessage+=details.message;              /// concat all the error message
-        }
-        res.status(400);
-        res.json({message: errMessage});
+        let errMessage = getErrorMessages(err);        
+        res.status(400).json({message: errMessage});
     }
 }
 
@@ -37,12 +29,8 @@ async function userUpdateFormValidate(req, res, next){
         next();
     }
     catch(err){
-        let errMessage = "";
-        for(details of err.details){
-            errMessage+=details.message;              /// concat all the error message
-        }
-        res.status(400);
-        res.json({message: errMessage});
+        let errMessage = getErrorMessages(err);        
+        res.status(400).json({message: errMessage});
     }
 }
 
@@ -52,12 +40,8 @@ async function bookFormValidate(req, res, next){
         next();
     }
     catch(err){
-        let errMessage = "";
-        for(details of err.details){
-            errMessage+=details.message;              /// concat all the error message
-        }
-        res.status(400);
-        res.json({message: errMessage});
+        let errMessage = getErrorMessages(err);        
+        res.status(400).json({message: errMessage});
     }
 }
 
@@ -67,13 +51,13 @@ async function bookUpdateFormValidate(req, res, next){
         next();
     }
     catch(err){
-        let errMessage = "";
-        for(details of err.details){
-            errMessage+=details.message;              /// concat all the error message
-        }
-        res.status(400);
-        res.json({message: errMessage});
+        let errMessage = getErrorMessages(err);        
+        res.status(400).json({message: errMessage});
     }
+}
+
+function getErrorMessages(err){
+    return err.details[0].message;
 }
 
 module.exports = {
