@@ -25,56 +25,83 @@ async function findSingleBook(bookInfo) {
 }
 
 async function findUsersBook(user) {
-  return await Book.find({ modifier: user._id });
+  try{
+    return await Book.find({ modifier: user._id });
+  }catch(err){
+    return err;
+  }
 }
 
 async function findAllBook() {
-  return await Book.find();
+  try{
+    return await Book.find();
+  }catch(err){
+    return err;
+  }
 }
 
 async function createBook(bookInfo, userId) {
-  bookInfo.modifier = userId;
-  const newBook = new Book(bookInfo);
-  return await newBook.save();
+  try{
+    bookInfo.modifier = userId;
+    const newBook = new Book(bookInfo);
+    return await newBook.save();
+  }catch(err){
+    return err;
+  }
 }
 
 async function editBook(bookId, updatedBook) {
-  const oldBook = Book.findOne({ _id: bookId });
-  if (updatedBook.image) deleteImage(oldBook.image);
-
-  else return await Book.updateOne({ _id: bookId }, { $set: updatedBook });
+  try{
+    const oldBook = await Book.findOne({ _id: bookId });
+    if (updatedBook.image) deleteImage(oldBook.image);
+    else return await Book.updateOne({ _id: bookId }, { $set: updatedBook });
+  }catch(err){
+    return err;
+  }
 }
 
 async function removeBook(book) {
-  book = await Book.findOne(book);
-  if (!book) return null;
-
-  deleteImage(book.image);
-  return await Book.deleteOne({ _id: book._id });
+  try{    
+    book = await Book.findOne(book);
+    if (!book) return null;
+  
+    deleteImage(book.image);
+    return await Book.deleteOne({ _id: book._id });
+  }catch(err){
+    return err;
+  }
 }
 
 async function removeUserBook(user) {
-  let books = await Book.find({ modifier: user._id });
-  let message = "";
-  books.forEach(async book => {
-    deleteImage(book.image);
-    message += await Book.deleteOne({ _id: book._id });
-  });
-  return message;
+  try{
+    let books = await Book.find({ modifier: user._id });
+    let message = "";
+    books.forEach(async book => {
+      deleteImage(book.image);
+      message += await Book.deleteOne({ _id: book._id });
+    });
+    return message;    
+  }catch(err){
+    return err;
+  }
 }
 
 async function searchBook(keyword) {
-  return await Book.find().or([
-    {
-      author: new RegExp(keyword)
-    },
-    {
-      title: new RegExp(keyword)
-    },
-    {
-      description: new RegExp(keyword)
-    }
-  ]);
+  try{
+    return await Book.find().or([
+      {
+        author: new RegExp(keyword)
+      },
+      {
+        title: new RegExp(keyword)
+      },
+      {
+        description: new RegExp(keyword)
+      }
+    ]);    
+  }catch(err){
+    return err;
+  }
 }
 
 function deleteImage(fileName) {

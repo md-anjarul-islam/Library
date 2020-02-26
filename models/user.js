@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRET;
 
 const userSchema = new db.Schema({
-  username: String,         
+  username: String,
   fullname: String,
   email: String,
   password: String,
@@ -20,46 +20,73 @@ userSchema.methods.getAuthToken = function() {
 const User = new db.model("Users", userSchema);
 
 async function createUser(aUser) {
-  const conflict = await checkConflict(aUser);
+  try {
+    const conflict = await checkConflict(aUser);
+    if (conflict) return false;
 
-  if (conflict) return false;
+    delete aUser.confirmpass;
 
-  delete aUser.confirmpass;
-  aUser.password = await bcrypt.hash(aUser.password, 10);
-  const newUser = new User(aUser);
-  return await newUser.save();
+    aUser.password = await bcrypt.hash(aUser.password, 10);
+    const newUser = new User(aUser);
+    return await newUser.save();
+  } catch (err) {
+    return err;
+  }
 }
 
 async function editUser(userId, userInfo) {
-  if (userInfo.password)
-    userInfo.password = await bcrypt.hash(userInfo.password, 10);
-
-  return await User.updateOne({ _id: userId }, { $set: userInfo });
+  try {
+    if (userInfo.password)
+      userInfo.password = await bcrypt.hash(userInfo.password, 10);
+    return await User.updateOne({ _id: userId }, { $set: userInfo });
+  } catch (err) {
+    return err;
+  }
 }
 
 async function removeUser(userId) {
-  return await User.deleteOne({ _id: userId });
+  try{
+    return await User.deleteOne({ _id: userId });
+  }catch(err){
+    return err;
+  }
 }
 
 async function checkConflict(user) {
-  return await User.findOne().or([
-    { username: user.username },
-    { email: user.email }
-  ]);
+  try{
+    return await User.findOne().or([
+      { username: user.username },
+      { email: user.email }
+    ]);
+  }catch(err){
+    return err;
+  }  
 }
 
 async function loginValidate(user) {
-  const validUser = await User.findOne({ username: user.username });
-  if (!validUser) return false;
-  else return await bcrypt.compare(user.password, validUser.password);
+  try{
+    const validUser = await User.findOne({ username: user.username });
+    if (!validUser) return false;
+    else return await bcrypt.compare(user.password, validUser.password);
+  }catch(err){
+    return err;
+  }  
 }
 
 async function findUser(userInfo) {
-  return await User.findOne(userInfo).select({ password: 0 });
+  try{
+    return await User.findOne(userInfo).select({ password: 0 });    
+  }catch(err){
+    return err;
+  }
 }
 
 async function findAllUser() {
-  return await User.find().select({ password: 0 });
+  try{
+    return await User.find().select({ password: 0 });
+  }catch(err){
+    return err;
+  }
 }
 
 function verifyToken(token) {
