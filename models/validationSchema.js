@@ -7,11 +7,8 @@ const loginSchema = Joi.object({
     .required(),
   password: Joi.string()
     .min(5)
-    .max(20)
-    .regex(/^[a-zA-Z0-9]+[@\$][a-zA-Z0-9]*$/)
-    .required()
-  // password must be started with any alphanumeric character
-  // and must contain a special character [@ or $]
+    .max(20)    
+    .required()  
 });
 
 const registrationSchema = Joi.object({
@@ -32,10 +29,6 @@ const registrationSchema = Joi.object({
   password: Joi.string()
     .min(5)
     .max(20)
-    .regex(/^[a-zA-Z0-9]+[@\$][a-zA-Z0-9]*$/)
-    .required(),
-  confirmpass: Joi.string()
-    .valid(Joi.ref("password"))
     .required()
 });
 
@@ -49,7 +42,6 @@ const userUpdateSchema = Joi.object({
   password: Joi.string()
     .min(5)
     .max(20)
-    .regex(/^[a-zA-Z0-9]+[@\$][a-zA-Z0-9]*$/)
     .optional()
 });
 
