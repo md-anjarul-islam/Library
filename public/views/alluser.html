@@ -1,0 +1,62 @@
+<div style="margin: 25px; text-align: center;">
+  <h4> All Users Informaton </h4>
+</div>
+
+<div class="container" style="width: 900px;">
+  <div class="row">
+    <% if(users.length == 0) {%>
+    <h3> Nobody has been registered yet. </h3>
+    <%} else {%>
+    <% users.forEach( (user) => { %>
+    <div class="col-sm card-book">
+      <div class="card shadow-lg" style="width: 220px; padding: 2px !important">
+        <div class="card-body card-book-body">
+          <h5 class="card-title" style="width: 180px;"> User Name: <%= user.username %></h5>
+          <p class="card-text"> Full Name: <%= user.fullname %></p>
+          <a href="#" class="btn btn-primary btn-sm" data-toggle="modal"
+            data-target="#exampleModalCenter<%= user._id %>">Details</a>
+          <a href="/admin/removeuser/<%= user._id %>" class="btn btn-primary btn-sm"> Remove </a>
+        </div>
+
+        <div class="modal fade" id="exampleModalCenter<%= user._id %>" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="width:400px;">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle"> User Information </h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="modal-author mb-3" style="display:flex; justify-content: space-between">
+                  <h5> User Name : </h5>
+                  <h6><%= user.username %></h6>
+                </div>
+
+                <div class="modal-seller mb-3" style="display:flex; justify-content: space-between">
+                  <div>
+                    <h5> Full Name : </h5>
+                  </div>
+                  <div style="padding-top: 4px; padding-left: 6px;">
+                    <h6><%= user.fullname %></h6>
+                  </div>
+                </div>
+
+                <div class="modal-image mb-3" style="display:flex; justify-content: space-between">
+                  <h5> Email : </h5>
+                  <h6> <%= user.email %></h6>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    </br>
+    <% }); %>
+    <% }%>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="container profile">
+  <div class="profile-head">
+    <h3> Profile Details </h3>
+  </div>
+
+  <div class="profile-body">
+    <div class="profile-row">
+      <div class="profile-property">
+        <h5> User Name </h5>
+      </div>
+      <div class="profile-property-value">
+        <h6> <%= userInfo.username%> </h6>
+      </div>
+    </div>
+
+    <div class="profile-row">
+      <div class="profile-property">
+        <h5> Full Name </h5>
+      </div>
+      <div class="profile-property-value">
+        <h6> <%= userInfo.fullname%> </h6>
+      </div>
+    </div>
+
+    <div class="profile-row">
+      <div class="profile-property">
+        <h5> Email </h5>
+      </div>
+      <div class="profile-property-value">
+        <h6> <%= userInfo.email%> </h6>
+      </div>
+    </div>
+  </div>
+
+  <a class="btn btn-primary btn-block mt-4" href="/user/editprofile/<%= userInfo._id %>"> Edit Profile </a>
+</div>

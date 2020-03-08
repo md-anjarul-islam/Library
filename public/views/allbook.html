@@ -1,0 +1,60 @@
+<div class="container" style="width: 900px;">
+  <div class="row">
+    <div ng-repeat="book in books">
+
+      <div class="col-sm card-book">
+        <div class="card shadow-lg" style="width: 220px; padding: 2px !important">
+          <img src="/uploads/{{book.image}}" width="100%" height="180px" style="padding:10px">
+          <div class="card-body card-book-body">
+            <h5 class="card-title" style="width: 180px;"> {{book.title }}</h5>
+            <p class="card-text"> Rating: {{ book.rating }}</p>
+            <a href="#" class="btn btn-primary btn-sm" data-toggle="modal"
+              data-target="#exampleModalCenter{{book._id}}">Details</a>
+          </div>
+
+          <div class="modal fade" id="exampleModalCenter{{book._id}}" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content" style="width:400px;">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalCenterTitle">{{book.title}}</h5>
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="modal-image mb-3" style="display:flex; justify-content: space-between">
+                    <h5> Cover Page: </h5>
+                    <img src="/uploads/<%= book.image %>" width="150px" height="200px">
+                  </div>
+
+                  <div class="modal-author mb-3" style="display:flex; justify-content: space-between">
+                    <h5> Author: </h5>
+                    <h6>{{book.author}}</h6>
+                  </div>
+
+                  <div class="modal-seller mb-3" style="display:flex; justify-content: space-between">
+                    <div>
+                      <h5> About: </h5>
+                    </div>
+                    <div style="padding-top: 4px; padding-left: 6px;">
+                      <h6>{{book.description}}</h6>
+                    </div>
+                  </div>
+
+                  <div class="modal-image mb-3" style="display:flex; justify-content: space-between">
+                    <h5> Rating: </h5>
+                    <h6> {{book.rating}}</h6>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </br>    
+  </div>
+</div>

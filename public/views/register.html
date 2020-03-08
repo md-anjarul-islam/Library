@@ -1,0 +1,37 @@
+<div class="container" style="width: 300px;">
+  <div class="card shadow-lg">
+    <h3 style="text-align: center;" class="card-header"> Register</h3> <br>
+
+    <div class="p-3">
+      <form>
+        <div class="form-group">
+          <input required type="text" name="username" ng-model="username" class="form-control" placeholder="username">
+        </div>
+
+        <div class="form-group">
+          <input required type="text" name="fullname" ng-model="fullname" class="form-control" placeholder="full name">
+        </div>
+
+        <div class="form-group">
+          <input required type="email" name="email" ng-model="email" class="form-control"
+            placeholder="example@gmail.com">
+        </div>
+
+        <div class="form-group">
+          <input required type="password" name="password" ng-model="password" class="form-control"
+            placeholder="password">
+        </div>
+
+        <div class="form-group">
+          <input required type="password" name="confirmpass" ng-model="confirmpass" class="form-control"
+            placeholder="confirm password">
+        </div>
+        <button ng-click="register()" class="btn btn-primary btn-block mt-4">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="m-3">
+    <strong> {{message}} </strong>
+  </div>
+</div>
