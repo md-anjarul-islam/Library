@@ -1,5 +1,5 @@
 const db = require("../config/db");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRET;
 
@@ -24,8 +24,7 @@ async function createUser(aUser) {
     const conflict = await checkConflict(aUser);
     if (conflict) return false;
 
-    delete aUser.confirmpass;
-
+    aUser.isAdmin = false;
     aUser.password = await bcrypt.hash(aUser.password, 10);
     const newUser = new User(aUser);
     return await newUser.save();
