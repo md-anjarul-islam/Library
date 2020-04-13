@@ -18,9 +18,9 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, "public"))); // configure express to use public folder
 
-app.use("/users", userRouter);
-app.use("/admin", adminRouter);
-app.use("/", indexRouter);
+app.use("/api/users", userRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/", indexRouter);
 app.use("*", (req, res) => {
   res.status(400).json({ message: "Bad Request." });
 });
