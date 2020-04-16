@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const path = require("path");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -15,6 +16,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors({ exposedHeaders: "x-token" }));
 
 app.use(express.static(path.join(__dirname, "public"))); // configure express to use public folder
 
@@ -27,5 +29,5 @@ app.use("*", (req, res) => {
 
 app.use(errorHandler);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 app.listen(port, () => console.log("The Server is running..."));

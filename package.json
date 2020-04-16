@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "prettier": "^1.19.1"
+  },
+  "scripts": {
+    "client": "cd client && npm start",
+    "server": "cd server && nodemon app",
+    "start": "concurrently -kill-others \"npm run server\" \"npm run client\""
+  },
+  "dependencies": {
+    "concurrently": "^5.1.0"
+  }
+}
