@@ -2,12 +2,12 @@ import React from "react";
 import { Link, Redirect, BrowserRouter } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
-import Register from "./Register";
 
 function LoginLayout(props) {
-  console.log("in login", props);
-  const [user, setUser] = useState({});
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  console.log("Login", props);
+
+  const [user, setUser] = useState(localStorage.getItem("user") || {});
+  // const [isLoggedIn, setLoggedIn] = useState(false);
 
   function fetchApi(event) {
     event.preventDefault();
@@ -25,28 +25,32 @@ function LoginLayout(props) {
       },
     })
       .then((data) => {
+        console.log(data.data);
         let token = data.headers["x-token"];
         localStorage.setItem("token", token);
-        setLoggedIn(true);
+        localStorage.setItem("user", JSON.stringify(data.data));
         setUser(data.data);
-        // console.log("inside", data.data);
         return data.data;
       })
       .catch((err) => {
-        // props.history.push("/login");
-        // console.log(err.response.data);
+        console.log("Error", err);
+        setUser(null);
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        let errorMessage = document.getElementById("errorMessage");
+        errorMessage.innerText = `${err.message}.\n Please try again`;
       });
   }
-  if (isLoggedIn) {
+  if (user && user._id) {
+    console.log("redirecting to user profile");
     return (
-      <BrowserRouter>
-        <Redirect to="/register" />
-      </BrowserRouter>
+      <Redirect
+        to={{ pathname: `/user/${user._id}`, state: { user: { ...user } } }}
+      />
     );
-    // props.history.push("/user/123");
   }
   return (
-    <div className="container" style={{ width: "400px" }}>
+    <div className="container" style={{ width: "500px" }}>
       <div className="card shadow-lg">
         <h5 style={{ textAlign: "center" }} className="card-header">
           Login
@@ -75,12 +79,12 @@ function LoginLayout(props) {
               Submit
             </button>
           </form>
+          <p id="errorMessage" className="alert"></p>
           <div style={{ textAlign: "center" }}>
             <Link to="/register"> Not registered? </Link>
           </div>
         </div>
       </div>
-      <p id="validationmsg"></p>
     </div>
   );
 }
