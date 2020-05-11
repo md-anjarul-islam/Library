@@ -2,35 +2,31 @@ import React from "react";
 import { Link, Redirect, BrowserRouter } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
-
+import { mainUrl, fetchAPI } from "../config";
 function LoginLayout(props) {
-  console.log("Login", props);
-
   const [user, setUser] = useState(localStorage.getItem("user") || {});
-  // const [isLoggedIn, setLoggedIn] = useState(false);
 
-  function fetchApi(event) {
+  function login(event) {
     event.preventDefault();
     let form = document.getElementById("form");
     let userInfo = {
       username: form.username.value,
       password: form.password.value,
     };
-    axios({
-      url: "http://localhost:3001/api/login",
+    fetchAPI(`${mainUrl}/api/login`, {
       method: "POST",
       data: JSON.stringify(userInfo),
       headers: {
         "Content-type": "application/json",
       },
     })
-      .then((data) => {
-        console.log(data.data);
-        let token = data.headers["x-token"];
+      .then((resposne) => {
+        console.log(resposne.data);
+        let token = resposne.headers["x-token"];
         localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(data.data));
-        setUser(data.data);
-        return data.data;
+        localStorage.setItem("user", JSON.stringify(resposne.data));
+        setUser(resposne.data);
+        return resposne.data;
       })
       .catch((err) => {
         console.log("Error", err);
@@ -56,7 +52,7 @@ function LoginLayout(props) {
           Login
         </h5>
         <div className="p-3">
-          <form id="form" onSubmit={(event) => fetchApi(event)}>
+          <form id="form" onSubmit={(event) => login(event)}>
             <div className="form-group" style={{ width: "100%" }}>
               <label htmlFor="username">User Name</label>
               <input
