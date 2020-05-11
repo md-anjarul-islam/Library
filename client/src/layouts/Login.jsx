@@ -3,6 +3,7 @@ import { Link, Redirect, BrowserRouter } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { mainUrl, fetchAPI } from "../config";
+import Card from "./Card";
 function LoginLayout(props) {
   const [user, setUser] = useState(localStorage.getItem("user") || {});
 
@@ -46,42 +47,37 @@ function LoginLayout(props) {
     );
   }
   return (
-    <div className="container" style={{ width: "500px" }}>
-      <div className="card shadow-lg">
-        <h5 style={{ textAlign: "center" }} className="card-header">
-          Login
-        </h5>
-        <div className="p-3">
-          <form id="form" onSubmit={(event) => login(event)}>
-            <div className="form-group" style={{ width: "100%" }}>
-              <label htmlFor="username">User Name</label>
-              <input
-                required
-                type="text"
-                name="username"
-                className="form-control"
-              />
-            </div>
-            <div className="form-group" style={{ width: "100%" }}>
-              <label htmlFor="password">Password</label>
-              <input
-                required
-                type="password"
-                name="password"
-                className="form-control"
-              />
-            </div>
-            <button type="submit" className="btn btn-primary btn-block mt-4">
-              Submit
-            </button>
-          </form>
-          <p id="errorMessage" className="alert"></p>
-          <div style={{ textAlign: "center" }}>
-            <Link to="/register"> Not registered? </Link>
+    <Card title={"Login"}>
+      <div className="p-1">
+        <form id="form" onSubmit={(event) => login(event)}>
+          <div className="form-group" style={{ width: "100%" }}>
+            <label htmlFor="username">User Name</label>
+            <input
+              required
+              type="text"
+              name="username"
+              className="form-control"
+            />
           </div>
+          <div className="form-group" style={{ width: "100%" }}>
+            <label htmlFor="password">Password</label>
+            <input
+              required
+              type="password"
+              name="password"
+              className="form-control"
+            />
+          </div>
+          <button type="submit" className="btn btn-primary btn-block mt-4">
+            Submit
+          </button>
+        </form>
+        <p id="errorMessage" className="alert"></p>
+        <div style={{ textAlign: "center" }}>
+          <Link to="/register"> Not registered? </Link>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 
