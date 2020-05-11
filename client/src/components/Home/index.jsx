@@ -17,13 +17,12 @@ const Home = (props) => {
               path={props.match.path + "register"}
               component={RegisterLayout}
             />
+            <Route
+              path={props.match.path + "books/:bookId"}
+              component={SingleBook}
+            />
           </div>
         </Route>
-
-        <Route
-          path={props.match.path + "books/:bookId"}
-          component={SingleBook}
-        />
       </Switch>
     </React.Fragment>
   );
