@@ -1,4 +1,5 @@
 import React from "react";
+import { mainUrl, fetchAPI } from "../config";
 
 const Card = (props) => {
   return (
@@ -13,10 +14,7 @@ const Card = (props) => {
           </h5>
         )}
         {props.image && (
-          <img
-            src={`http://localhost:3001/uploads/${props.image}`}
-            alt={props.title}
-          />
+          <img src={`${mainUrl}/uploads/${props.image}`} alt={props.title} />
         )}
         <div className="m-3 p-2">{props.children}</div>
       </div>

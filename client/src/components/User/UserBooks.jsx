@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import SingleBook from "../Home/SingleBook";
 import BookLayout from "../Home/BookLayout";
+import { mainUrl, fetchAPI } from "../../config";
 
 const UserBooks = (props) => {
   const [books, bookHandler] = useState([]);
@@ -18,9 +19,8 @@ const UserBooks = (props) => {
 
   useEffect(() => {
     let abortController = new AbortController();
-    axios({
+    fetchAPI(`${mainUrl}/api/admin/books`, {
       method: "get",
-      url: "http://localhost:3001/api/admin/books",
       headers: { token: localStorage.getItem("token") },
     })
       .then(({ data }) => {

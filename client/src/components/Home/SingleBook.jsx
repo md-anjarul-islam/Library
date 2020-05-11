@@ -12,8 +12,7 @@ class SingleBook extends Component {
   }
 
   async componentDidMount() {
-    axios({
-      url: `${mainUrl}/api/books/${this.props.match.params.bookId}`,
+    fetchAPI(`${mainUrl}/api/books/${this.props.match.params.bookId}`, {
       method: "get",
     })
       .then(({ data }) => {
@@ -29,10 +28,12 @@ class SingleBook extends Component {
 
   async componentDidUpdate(prevProp, prevState) {
     try {
-      let { data } = await axios({
-        url: `${mainUrl}/api/books/${this.props.match.params.bookId}`,
-        method: "get",
-      });
+      let { data } = await fetchAPI(
+        `${mainUrl}/api/books/${this.props.match.params.bookId}`,
+        {
+          method: "get",
+        }
+      );
       if (
         this._isMounted &&
         JSON.stringify(prevState.book) != JSON.stringify(data)

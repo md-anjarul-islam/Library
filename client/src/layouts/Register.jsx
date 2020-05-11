@@ -1,9 +1,13 @@
 import React from "react";
+import { mainUrl, fetchAPI } from "../config";
 
 const RegisterLayout = () => {
-  const serverUrl = "http://localhost:3001";
+  const serverUrl = mainUrl;
   return (
-    <div className="container" style={{ width: "400px" }}>
+    <div
+      className="container"
+      style={{ width: "400px", position: "sticky", top: 0 }}
+    >
       <div className="card shadow-lg">
         <h5 style={{ textAlign: "center" }} className="card-header">
           Register

@@ -1,7 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import BookLayout from "../../layouts/BookLayout";
+import BookLayout from "./BookLayout";
 import axios from "axios";
+import { mainUrl, fetchAPI } from "../../config";
 
 function BookComponent(props) {
   const [books, setBooks] = useState([]);
@@ -11,9 +12,8 @@ function BookComponent(props) {
 
   useEffect(() => {
     let abortController = new AbortController();
-    axios({
+    fetchAPI(`${mainUrl}/api/books`, {
       method: "get",
-      url: "http://localhost:3001/api/books",
       headers: { token: localStorage.getItem("token") },
     })
       .then(({ data }) => {
