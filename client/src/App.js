@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import axios from "axios";
 
-import "./App.css";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 import Books from "./components/Home/Books";
 import User from "./components/User";
