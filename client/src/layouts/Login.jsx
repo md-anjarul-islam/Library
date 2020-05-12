@@ -5,7 +5,11 @@ import { useState } from "react";
 import { mainUrl, fetchAPI } from "../config";
 import Card from "./Card";
 function LoginLayout(props) {
-  const [user, setUser] = useState(localStorage.getItem("user") || {});
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user")) || {}
+  );
+
+  let message = props.location.state ? props.location.state.message : "";
 
   function login(event) {
     event.preventDefault();
@@ -22,7 +26,6 @@ function LoginLayout(props) {
       },
     })
       .then((resposne) => {
-        console.log(resposne.data);
         let token = resposne.headers["x-token"];
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(resposne.data));
@@ -30,16 +33,18 @@ function LoginLayout(props) {
         return resposne.data;
       })
       .catch((err) => {
-        console.log("Error", err);
         setUser(null);
         localStorage.removeItem("user");
         localStorage.removeItem("token");
-        let errorMessage = document.getElementById("errorMessage");
-        errorMessage.innerText = `${err.message}.\n Please try again`;
+        message = `${err.message}.\n Please try again`;
       });
   }
   if (user && user._id) {
-    return <Redirect to={{ ...props.location.state.from }} />;
+    const { state } = props.location;
+    let referrer = `/user/${user._id}`;
+    if (state && state.from && state.from.pathname)
+      referrer = state.from.pathname;
+    return <Redirect to={referrer} />;
   }
   return (
     <Card title={"Login"}>
@@ -63,11 +68,15 @@ function LoginLayout(props) {
               className="form-control"
             />
           </div>
-          <button type="submit" className="btn btn-primary btn-block mt-4">
+          <button type="submit" className="btn btn-primary btn-block m-2">
             Submit
           </button>
         </form>
-        <p id="errorMessage" className="alert"></p>
+        {message && (
+          <p id="errorMessage" className="alert alert-danger">
+            {message}
+          </p>
+        )}
         <div style={{ textAlign: "center" }}>
           <Link to="/register"> Not registered? </Link>
         </div>
