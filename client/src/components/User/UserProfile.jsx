@@ -3,7 +3,7 @@ import { Link, Route, Redirect } from "react-router-dom";
 import Card from "./../../layouts/Card";
 
 const Profile = (props) => {
-  const user = props.location.state ? props.location.state.user : undefined;
+  const user = JSON.parse(localStorage.getItem("user"));
   if (user !== undefined)
     return (
       <Card title={"Profile page"}>
@@ -12,7 +12,12 @@ const Profile = (props) => {
         <Link to={`${props.match.url}/books`}>Show my books</Link>
       </Card>
     );
-  else return <Redirect to="/login"></Redirect>;
+  else
+    return (
+      <Redirect
+        to={{ pathname: "/login", state: { from: props.location } }}
+      ></Redirect>
+    );
 };
 
 export default Profile;
