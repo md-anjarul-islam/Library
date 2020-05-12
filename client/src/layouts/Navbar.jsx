@@ -29,6 +29,18 @@ const Navbar = (props) => {
             Register
           </Link>
         </ListItem>
+        <ListItem>
+          <Link
+            className="nav-link"
+            to="/logout"
+            onClick={(ev) => {
+              ev.preventDefault();
+              localStorage.clear();
+            }}
+          >
+            Logout
+          </Link>
+        </ListItem>
       </UnorderList>
     </NavbarUI>
   );
