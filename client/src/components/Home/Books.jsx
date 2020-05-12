@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import BookLayout from "./BookLayout";
-import axios from "axios";
 import { mainUrl, fetchAPI } from "../../config";
 
 function BookComponent(props) {

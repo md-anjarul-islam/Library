@@ -2,18 +2,19 @@ import React from "react";
 import { mainUrl, fetchAPI } from "../config";
 
 const RegisterLayout = () => {
-  const serverUrl = mainUrl;
+  console.log("Register");
+
   return (
     <div
       className="container"
-      style={{ width: "400px", position: "sticky", top: 0 }}
+      style={{ width: "500px", height: "400px", position: "sticky", top: 0 }}
     >
       <div className="card shadow-lg">
         <h5 style={{ textAlign: "center" }} className="card-header">
           Register
         </h5>
-        <div className="p-3">
-          <form id="form" action={`${serverUrl}/register`} method="POST">
+        <div className="m-2">
+          <form id="form" action={`${mainUrl}/register`} method="POST">
             <div className="form-group" style={{ width: "100%" }}>
               <label htmlFor="username"> User Name </label>
               <input
@@ -64,7 +65,7 @@ const RegisterLayout = () => {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary btn-block mt-4">
+            <button type="submit" className="btn btn-primary btn-block mt-2">
               Submit
             </button>
           </form>

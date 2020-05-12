@@ -8,15 +8,13 @@ const Card = (props) => {
       style={{ width: "400px", position: "sticky", top: 0 }}
     >
       <div className="card shadow-lg">
-        {props.title && (
-          <h5 style={{ textAlign: "center" }} className="card-header">
-            {props.title}
-          </h5>
-        )}
+        <h5 style={{ textAlign: "center" }} className="card-header">
+          {props.title}
+        </h5>
         {props.image && (
           <img src={`${mainUrl}/uploads/${props.image}`} alt={props.title} />
         )}
-        <div className="m-3 p-2">{props.children}</div>
+        <div className="m-2">{props.children}</div>
       </div>
     </div>
   );

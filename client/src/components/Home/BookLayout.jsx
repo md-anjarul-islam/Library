@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { mainUrl, fetchAPI } from "../../config";
 
 const BookLayout = (props) => {
   const book = props.book;
@@ -12,7 +13,7 @@ const BookLayout = (props) => {
       >
         {image && (
           <img
-            src={`http://localhost:3001/uploads/${image}`}
+            src={`${mainUrl}/uploads/${image}`}
             width="100%"
             height="200px"
             style={{ padding: "10px" }}

@@ -1,58 +1,99 @@
-import React, { useState, useEffect, Component } from "react";
+import React, { useState, useEffect } from "react";
+import propTypes from "prop-types";
 import { Link, Route } from "react-router-dom";
-import axios from "axios";
 import Card from "../../layouts/Card";
-import { fetchAPI, mainUrl } from "../../config";
+import { mainUrl, fetchAPI } from "../../config";
 
-class SingleBook extends Component {
+class SingleBook extends React.Component {
   constructor(props) {
     super(props);
+    this.abortController = new AbortController();
+    this._ismounted = true;
+    // this.cancelTokenSource = axios.CancelToken.source();
     this.state = { book: {} };
-    this._isMounted = true;
   }
-
-  async componentDidMount() {
+  componentDidMount() {
     fetchAPI(`${mainUrl}/api/books/${this.props.match.params.bookId}`, {
       method: "get",
     })
       .then(({ data }) => {
-        console.log("component did mount", data);
-        console.log(
-          "comp",
-          JSON.stringify(this.state.book) == JSON.stringify(data)
-        );
-        if (this._isMounted) this.setState({ book: data });
+        if (this._ismounted) this.setState({ book: data });
+        console.log(data, this.state.book);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        if (this._ismounted) console.log(err);
+      });
   }
-
-  async componentDidUpdate(prevProp, prevState) {
-    try {
-      let { data } = await fetchAPI(
-        `${mainUrl}/api/books/${this.props.match.params.bookId}`,
-        {
-          method: "get",
-        }
-      );
-      if (
-        this._isMounted &&
-        JSON.stringify(prevState.book) != JSON.stringify(data)
-      )
-        this.setState({ book: data });
-    } catch (err) {
-      console.log(err);
-    }
+  componentWillUpdate() {
+    fetchAPI(`${mainUrl}/api/books/${this.props.match.params.bookId}`, {
+      method: "get",
+    })
+      .then(({ data }) => {
+        if (this._ismounted) this.setState({ book: data });
+      })
+      .catch((err) => {
+        if (this._ismounted) console.log(err);
+      });
   }
   componentWillUnmount() {
-    this._isMounted = false;
+    this.abortController.abort();
+    this._ismounted = false;
+    // this.cancelTokenSource.cancel();
   }
 
   render() {
     return (
-      <Card title={this.state.book.title} image={this.state.book.image}>
-        <p>Author: {this.state.book.author}</p>
-      </Card>
+      <div
+        style={{
+          width: "500px",
+          position: "-webkit-sticky",
+          position: "sticky",
+          top: 0,
+        }}
+      >
+        <div
+          className="container"
+          style={{ width: "100%", height: "100%", position: "sticky", top: 0 }}
+        >
+          <div className="card shadow-lg">
+            <h5 style={{ textAlign: "center" }} className="card-header">
+              {this.state.book.title}
+            </h5>
+            {this.state.book.image && (
+              <img
+                src={`${mainUrl}/uploads/${this.state.book.image}`}
+                alt={this.state.book.title}
+                style={{
+                  width: "220px",
+                  height: "200x",
+                  maxHeight: "200px",
+                  margin: "auto",
+                }}
+              />
+            )}
+            <div
+              className="m-3 p-2"
+              style={{ height: "100px", overflow: "scroll" }}
+            >
+              {this.state.book.description && (
+                <fieldset>Description: {this.state.book.description}</fieldset>
+              )}
+              {this.state.book.rating && (
+                <p>Rating: {this.state.book.rating}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 }
+
+SingleBook.propTypes = {
+  title: propTypes.string,
+  author: propTypes.string,
+  description: propTypes.string,
+  rating: propTypes.number,
+  image: propTypes.string,
+};
 export default SingleBook;

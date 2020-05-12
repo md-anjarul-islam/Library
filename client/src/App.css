@@ -6,6 +6,10 @@
   height: 40vmin;
   pointer-events: none;
 }
+#root {
+  width: 1000px;
+  margin: auto;
+}
 
 .books {
   width: 800px;
@@ -31,9 +35,9 @@
   width: 200px;
 }
 .form-group {
-  margin: auto;
-  padding: 1px;
-  width: 170px;
+  margin: 2px;
+  padding: 2px;
+  margin-bottom: auto;
 }
 ul {
   list-style-type: none;

@@ -7,7 +7,6 @@ import {
   Redirect,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import SingleBook from "../Home/SingleBook";
 import BookLayout from "../Home/BookLayout";
 import { mainUrl, fetchAPI } from "../../config";

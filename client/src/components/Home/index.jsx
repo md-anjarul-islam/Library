@@ -10,8 +10,9 @@ const Home = (props) => {
     <React.Fragment>
       <Switch>
         <Route path={props.match.path}>
-          <div style={{ display: "flex", height: "600px", overflow: "scroll" }}>
+          <div style={{ display: "flex", height: "500px", overflow: "scroll" }}>
             <Books />
+
             <Route path={props.match.path + "login"} component={LoginLayout} />
             <Route
               path={props.match.path + "register"}
