@@ -1,6 +1,6 @@
 import React from "react";
 import { mainUrl, fetchAPI } from "../config";
-
+import propTypes from "prop-types";
 const Card = (props) => {
   return (
     <div
@@ -18,6 +18,12 @@ const Card = (props) => {
       </div>
     </div>
   );
+};
+
+Card.propTypes = {
+  title: propTypes.string,
+  image: propTypes.any,
+  children: propTypes.node,
 };
 
 export default Card;

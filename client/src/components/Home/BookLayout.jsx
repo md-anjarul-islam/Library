@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { mainUrl, fetchAPI } from "../../config";
+import propTypes from "prop-types";
 
 const BookLayout = (props) => {
   const book = props.book;
@@ -31,6 +32,19 @@ const BookLayout = (props) => {
       </div>
     </div>
   );
+};
+
+BookLayout.propTypes = {
+  book: propTypes.shape({
+    _id: propTypes.string,
+    title: propTypes.string,
+    author: propTypes.string,
+    description: propTypes.string,
+    rating: propTypes.number,
+    image: propTypes.any,
+    seller: propTypes.string,
+    modifier: propTypes.string,
+  }),
 };
 
 export default BookLayout;

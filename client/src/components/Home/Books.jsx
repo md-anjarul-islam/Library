@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import BookLayout from "./BookLayout";
 import { mainUrl, fetchAPI } from "../../config";
+import propTypes from "prop-types";
 
 function BookComponent(props) {
   const [books, setBooks] = useState([]);
@@ -54,4 +55,16 @@ function BookComponent(props) {
     );
 }
 
+BookComponent.propTypes = {
+  book: propTypes.shape({
+    _id: propTypes.string,
+    title: propTypes.string,
+    author: propTypes.string,
+    description: propTypes.string,
+    rating: propTypes.number,
+    image: propTypes.any,
+    seller: propTypes.string,
+    modifier: propTypes.string,
+  }),
+};
 export default BookComponent;
