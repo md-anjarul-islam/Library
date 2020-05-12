@@ -39,12 +39,7 @@ function LoginLayout(props) {
       });
   }
   if (user && user._id) {
-    console.log("redirecting to user profile");
-    return (
-      <Redirect
-        to={{ pathname: `/user/${user._id}`, state: { user: { ...user } } }}
-      />
-    );
+    return <Redirect to={{ ...props.location.state.from }} />;
   }
   return (
     <Card title={"Login"}>
