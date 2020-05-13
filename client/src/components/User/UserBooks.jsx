@@ -5,20 +5,25 @@ import {
   BrowserRouter as Router,
   Switch,
   Redirect,
+  useParams,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
 import SingleBook from "../Home/SingleBook";
-import BookLayout from "../Home/BookLayout";
+import UserBookLayout from "./UserBookLayout";
+import UserSingleBook from "./UserSingleBook";
+
 import { mainUrl, fetchAPI } from "../../config";
 
 const UserBooks = (props) => {
   const [books, bookHandler] = useState([]);
   const [isError, LoadError] = useState({});
   const [isLodaded, LoadData] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     let abortController = new AbortController();
-    fetchAPI(`${mainUrl}/api/admin/books`, {
+
+    fetchAPI(`${mainUrl}/api/users/${user._id}/books`, {
       method: "get",
       headers: { token: localStorage.getItem("token") },
     })
@@ -42,10 +47,11 @@ const UserBooks = (props) => {
       <div className="row">
         {books.map((book) => {
           return (
-            <BookLayout
+            <UserBookLayout
               key={book._id}
               book={book}
               currentUrl={props.match.url}
+              link={`${props.match.url}/${book._id}`}
             />
           );
         })}
@@ -53,7 +59,7 @@ const UserBooks = (props) => {
       <Switch>
         <Route
           path={`${props.match.path}/:bookId`}
-          component={SingleBook}
+          component={UserSingleBook}
           props={props}
         />
       </Switch>
