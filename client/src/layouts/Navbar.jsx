@@ -1,8 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = (props) => {
-  console.log("Navbar");
+  const [updated, setUpdated] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const publicLinks = [
+    { name: "Home", url: "/" },
+    { name: "Login", url: "/login" },
+    { name: "Register", url: "/register" },
+  ];
+
+  const privateLinks = [
+    { name: "Home", url: "/" },
+    { name: "Profile", url: `/user/${user && user._id}` },
+    { name: "Dashboard", url: `/user/${user && user._id}/books` },
+    {
+      name: "Logout",
+      url: "/",
+      method: () => {
+        localStorage.clear();
+        setUpdated(true);
+      },
+    },
+  ];
 
   return (
     <NavbarUI>
@@ -14,36 +34,26 @@ const Navbar = (props) => {
           </form>
         </ListItem>
 
-        <ListItem>
-          <Link className="nav-link" to="/">
-            Home
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link to="/login" className="nav-link">
-            Login
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link className="nav-link" to="/register">
-            Register
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
-            className="nav-link"
-            to="/logout"
-            onClick={(ev) => {
-              ev.preventDefault();
-              localStorage.clear();
-            }}
-          >
-            Logout
-          </Link>
-        </ListItem>
+        {user && user._id
+          ? createNavbar(privateLinks)
+          : createNavbar(publicLinks)}
       </UnorderList>
     </NavbarUI>
   );
+};
+
+const createNavbar = (links) => {
+  return links.map((link) => (
+    <ListItem>
+      <Link
+        className={link.class || "nav-link"}
+        to={link.url}
+        onClick={() => link.method && link.method()}
+      >
+        {link.name}
+      </Link>
+    </ListItem>
+  ));
 };
 
 const NavbarUI = ({ children }) => {
@@ -64,4 +74,5 @@ const UnorderList = ({ children }) => {
 const ListItem = ({ children }) => {
   return <li className="nav-item">{children}</li>;
 };
+
 export default Navbar;
