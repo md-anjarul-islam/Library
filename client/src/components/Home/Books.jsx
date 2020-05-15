@@ -1,14 +1,18 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import BookLayout from "./BookLayout";
 import { mainUrl, fetchAPI } from "../../config";
 import propTypes from "prop-types";
+import BookList from "../../UI-components/BookList";
 
 function BookComponent(props) {
   const [books, setBooks] = useState([]);
   const [error, setErrorData] = useState({});
   const [isError, setErrorFlag] = useState(false);
   const [isLodaded, setLoad] = useState(false);
+  const [modified, setModified] = useState(false);
+  function updateBookList() {
+    setModified(true);
+  }
 
   useEffect(() => {
     let abortController = new AbortController();
@@ -43,16 +47,7 @@ function BookComponent(props) {
         <h3>Loading...</h3>
       </div>
     );
-  else if (isLodaded)
-    return (
-      <div className="container" style={{ width: "900px" }}>
-        <div className="row">
-          {books.map((book) => {
-            return <BookLayout key={book._id} book={book} />;
-          })}
-        </div>
-      </div>
-    );
+  else if (isLodaded) return <BookList books={books} />;
 }
 
 BookComponent.propTypes = {
