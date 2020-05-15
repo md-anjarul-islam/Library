@@ -33,10 +33,10 @@ function LoginLayout(props) {
         return resposne.data;
       })
       .catch((err) => {
-        setUser(null);
         localStorage.removeItem("user");
         localStorage.removeItem("token");
         message = `${err.message}.\n Please try again`;
+        setUser(null);
       });
   }
   if (user && user._id) {
