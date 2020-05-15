@@ -1,16 +1,6 @@
 import React from "react";
-import {
-  Link,
-  Route,
-  BrowserRouter as Router,
-  Switch,
-  Redirect,
-  useParams,
-} from "react-router-dom";
 import { useState, useEffect } from "react";
-import SingleBook from "../Home/SingleBook";
 import UserBookLayout from "./UserBookLayout";
-import UserSingleBook from "./UserSingleBook";
 
 import { mainUrl, fetchAPI } from "../../config";
 
@@ -40,7 +30,12 @@ const UserBooks = (props) => {
     return () => abortController.abort();
   }, []);
 
-  if (!isLodaded) return <div>Loading...</div>;
+  if (!isLodaded)
+    return (
+      <div>
+        <h1>Loading...</h1>
+      </div>
+    );
 
   return (
     <div className="container" style={{ width: "900px", display: "flex" }}>
@@ -56,13 +51,6 @@ const UserBooks = (props) => {
           );
         })}
       </div>
-      <Switch>
-        <Route
-          path={`${props.match.path}/:bookId`}
-          component={UserSingleBook}
-          props={props}
-        />
-      </Switch>
     </div>
   );
 };
