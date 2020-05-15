@@ -5,25 +5,27 @@ import SingleBook from "./SingleBook";
 import LoginLayout from "../../layouts/Login";
 import RegisterLayout from "../../layouts/Register";
 
+const routes = [
+  { pathname: "login", component: LoginLayout },
+  { pathname: "register", component: RegisterLayout },
+  { pathname: "books/:bookId", component: SingleBook },
+  { pathname: "", component: Books },
+];
+
 const Home = (props) => {
   return (
     <React.Fragment>
       <Switch>
-        <Route path={props.match.path}>
-          <div style={{ display: "flex", height: "500px", overflow: "scroll" }}>
-            <Books />
-
-            <Route path={props.match.path + "login"} component={LoginLayout} />
-            <Route
-              path={props.match.path + "register"}
-              component={RegisterLayout}
-            />
-            <Route
-              path={props.match.path + "books/:bookId"}
-              component={SingleBook}
-            />
-          </div>
-        </Route>
+        <Route path={props.match.path + "login"} component={LoginLayout} />
+        <Route
+          path={props.match.path + "register"}
+          component={RegisterLayout}
+        />
+        <Route
+          path={props.match.path + "books/:bookId"}
+          component={SingleBook}
+        />
+        <Route path={props.match.path} component={Books} />
       </Switch>
     </React.Fragment>
   );
