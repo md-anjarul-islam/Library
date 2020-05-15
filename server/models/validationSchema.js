@@ -9,7 +9,7 @@ const loginSchema = Joi.object({
     .min(5)
     .max(20)
     .regex(/^[a-zA-Z0-9]+[@\$][a-zA-Z0-9]*$/)
-    .required()
+    .required(),
   // password must be started with any alphanumeric character
   // and must contain a special character [@ or $]
 });
@@ -36,11 +36,13 @@ const registrationSchema = Joi.object({
     .required(),
   confirmpass: Joi.string()
     .valid(Joi.ref("password"))
-    .required()
+    .required(),
 });
 
 const userUpdateSchema = Joi.object({
-  username: Joi.forbidden(),
+  username: Joi.string()
+    .min(5)
+    .max(15),
   fullname: Joi.string()
     .min(5)
     .max(30)
@@ -50,7 +52,7 @@ const userUpdateSchema = Joi.object({
     .min(5)
     .max(20)
     .regex(/^[a-zA-Z0-9]+[@\$][a-zA-Z0-9]*$/)
-    .optional()
+    .optional(),
 });
 
 const bookSchema = Joi.object({
@@ -76,7 +78,7 @@ const bookSchema = Joi.object({
     .optional(),
   modifier: Joi.string()
     .max(30)
-    .forbidden()
+    .forbidden(),
 });
 
 const bookupDateSchema = Joi.object({
@@ -100,7 +102,8 @@ const bookupDateSchema = Joi.object({
     .optional(),
   modifier: Joi.string()
     .max(30)
-    .forbidden()
+    .forbidden(),
+  image: Joi.any(),
 });
 
 module.exports = {
@@ -108,5 +111,5 @@ module.exports = {
   registrationSchema,
   userUpdateSchema,
   bookSchema,
-  bookupDateSchema
+  bookupDateSchema,
 };
